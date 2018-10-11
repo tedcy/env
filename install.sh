@@ -23,6 +23,8 @@ python install.py --gocode-completer --clang-completer
 cd -
 
 #other install
+cp vimrcs/other.vimrc ~/.vimrc
+vim +PluginInstall -c quitall
 
 #cp .ycm_extra_conf.py
 cp ycm_extra_conf.py ~/.ycm_extra_conf.py

@@ -9,6 +9,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
 Plugin 'vim-scripts/taglist.vim'
 Bundle 'Valloric/YouCompleteMe'
+Plugin 'iamcco/markdown-preview.vim'
 
 call vundle#end()
 filetype plugin indent on
