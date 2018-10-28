@@ -29,3 +29,7 @@ cp ycm_extra_conf.py ~/.ycm_extra_conf.py
 
 #final vimrc
 cp vimrcs/final.vimrc ~/.vimrc
+
+#https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
+#compdb -p build/ list > compile_commands.json
+pip install compdb
