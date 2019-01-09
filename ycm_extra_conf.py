@@ -38,84 +38,19 @@ DIR_OF_THIS_SCRIPT = os.path.abspath( os.path.dirname( __file__ ) )
 DIR_OF_THIRD_PARTY = os.path.join( DIR_OF_THIS_SCRIPT, 'third_party' )
 SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
 
-# These are the compilation flags that will be used in case there's no
-# compilation database set (by default, one is not set).
-# CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
+#flags get with echo | clang -v -x c++ -
 flags = [
-#'-Wall',
-#'-Wextra',
-#'-Werror',
-#'-Wno-long-long',
-#'-Wno-variadic-macros',
-'-fexceptions',
-'-DNDEBUG',
-# You 100% do NOT need -DUSE_CLANG_COMPLETER and/or -DYCM_EXPORT in your flags;
-# only the YCM source code needs it.
-'-DUSE_CLANG_COMPLETER',
-#'-DYCM_EXPORT=',
-# THIS IS IMPORTANT! Without the '-x' flag, Clang won't know which language to
-# use when compiling headers. So it will guess. Badly. So C++ headers will be
-# compiled as C headers. You don't want that so ALWAYS specify the '-x' flag.
-# For a C project, you would set this to 'c' instead of 'c++'.
-'-x',
-'c++',
-'-isystem',
-'cpp/pybind11',
-'-isystem',
-'cpp/BoostParts',
-'-isystem',
-get_python_inc(),
-'-isystem',
-'cpp/llvm/include',
-'-isystem',
-'cpp/llvm/tools/clang/include',
-'-I',
-'cpp/ycm',
-'-I',
-'.',
-'-I',
-'..',
-'-I',
-'../..',
-'-I',
-'/usr/include',
-'-I',
-'/usr/local/include',
-'-I',
-'/usr/include/c++/4.8.4',
-'-I',
-'build',
-'-I',
-'cpp/ycm/ClangCompleter',
-'-isystem',
-'cpp/ycm/tests/gmock/gtest',
-'-isystem',
-'cpp/ycm/tests/gmock/gtest/include',
-'-isystem',
-'cpp/ycm/tests/gmock',
-'-isystem',
-'cpp/ycm/tests/gmock/include',
-'-isystem',
-'cpp/ycm/benchmarks/benchmark/include',
+    '-Wall',
+    '-Wextra',
+    '-Werror',
+    '-std=c++11',
+    '-x', 'c++',    
+    '-isystem', '/usr/include/c++/7.3.0',
+    '-isystem', '/usr/include/x86_64-linux-gnu/c++/7.3.0',
+    '-isystem', '/usr/include/c++/7.3.0/backward',
+    '-isystem', '/usr/local/include',
+    '-isystem', '/usr/include',
 ]
-
-# Clang automatically sets the '-std=' flag to 'c++14' for MSVC 2015 or later,
-# which is required for compiling the standard library, and to 'c++11' for older
-# versions.
-if platform.system() != 'Windows':
-  flags.append( '-std=c++11' )
-
-
-# Set this to the absolute path to the folder (NOT the file!) containing the
-# compile_commands.json file to use that instead of 'flags'. See here for
-# more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
-#
-# You can get CMake to generate this file for you by adding:
-#   set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
-# to your CMakeLists.txt file.
-#
-# Most projects will NOT need to set this to anything; you can just change the
-# 'flags' list of compilation flags. Notice that YCM itself uses that approach.
 compilation_database_folder = 'build'
 compilation_database_folder1 = '../build'
 compilation_database_folder2 = '../../build'
