@@ -10,3 +10,4 @@ Bundle 'Valloric/YouCompleteMe'
 
 call vundle#end()
 filetype plugin indent on
+let g:go_version_warning = 0
