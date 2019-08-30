@@ -7,9 +7,10 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
-Plugin 'vim-scripts/taglist.vim'
+"Plugin 'vim-scripts/taglist.vim'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'iamcco/markdown-preview.vim'
+Bundle 'majutsushi/tagbar'
 
 call vundle#end()
 filetype plugin indent on
@@ -79,10 +80,14 @@ set foldlevel=1
 set completeopt=menuone
 
 " taglist
-let Tlist_Show_One_File=1
-let Tlist_Exit_OnlyWindow=1
-map TL :Tlist<CR>
-map TU :TlistUpdate<CR>
+"let Tlist_Show_One_File=1
+"let Tlist_Exit_OnlyWindow=1
+"map TL :Tlist<CR>
+"map TU :TlistUpdate<CR>
+
+" tagbar
+map <F8> :TagbarToggle<CR>
+let g:tagbar_sort = 0
 
 " vim-go
 let g:go_fmt_autosave = 0
