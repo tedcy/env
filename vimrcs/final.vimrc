@@ -73,9 +73,9 @@ set wildmenu
 " 设置不自动折行
 set nowrap
 "折叠
-set nofoldenable
-set foldmethod=syntax
-set foldlevel=1
+"set nofoldenable
+"set foldmethod=syntax
+"set foldlevel=1
 "去除vim自带的preview补全窗口
 set completeopt=menuone
 
@@ -84,10 +84,6 @@ set completeopt=menuone
 "let Tlist_Exit_OnlyWindow=1
 "map TL :Tlist<CR>
 "map TU :TlistUpdate<CR>
-
-" tagbar
-map <F8> :TagbarToggle<CR>
-let g:tagbar_sort = 0
 
 " vim-go
 let g:go_fmt_autosave = 0
@@ -106,3 +102,7 @@ let g:mkdp_auto_close=0
 ""autocmd BufNewFile,BufRead *.md map <F8> :StopMarkdownPreview<CR>
 nmap <F5> <Plug>MarkdownPreview
 nmap <F6> <Plug>StopMarkdownPreview
+
+" tagbar
+map <F8> :TagbarToggle<CR>
+let g:tagbar_sort = 0
