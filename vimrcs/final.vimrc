@@ -67,7 +67,8 @@ set undofile
 set undodir=$VIM/vimfiles/undodir
 set undolevels=100
 "需要自动改变vim的当前目录为打开的文件所在目录
-set autochdir
+"set autochdir有bug，必须这样写才生效
+autocmd VimEnter * set autochdir
 "启动具有菜单项提示的命令行自动完成。
 set wildmenu
 " 设置不自动折行
