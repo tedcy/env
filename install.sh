@@ -7,6 +7,7 @@ set -e
 apt-get install -y build-essential cmake python3-dev --allow-unauthenticated
 
 #vundle
+rm -rf ~/.vim/bundle/Vundle.vim
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 cp vimrcs/vundle.vimrc ~/.vimrc
 vim +PluginInstall -c quitall
@@ -44,7 +45,7 @@ cp vimrcs/final.vimrc ~/.vimrc
 #for cmake completion
 #https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
 #compdb -p build/ list > compile_commands.json  
-wget https://bootstrap.pypa.io/get-pip.py       
+wget https://bootstrap.pypa.io/pip/3.5/get-pip.py -O get-pip.py
 python3 get-pip.py
 pip install compdb
 rm -rf get-pip.py
