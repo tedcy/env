@@ -107,3 +107,6 @@ nmap <F6> <Plug>StopMarkdownPreview
 " tagbar
 map <F8> :TagbarToggle<CR>
 let g:tagbar_sort = 0
+
+autocmd BufEnter * let &titlestring = hostname() . '-' . expand("%:t") 
+set title
