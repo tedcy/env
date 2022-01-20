@@ -11,6 +11,8 @@ Plugin 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'iamcco/markdown-preview.vim'
 Bundle 'majutsushi/tagbar'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 
 call vundle#end()
 filetype plugin indent on
@@ -94,7 +96,7 @@ let g:go_highlight_trailing_whitespace_error = 0
 au BufNewFile,BufRead *.go nnoremap gy :GoDef<CR>
 
 " C++
-autocmd BufNewFile,BufRead *.cpp map <F5> :! g++ -std=c++11 %:p -o out.exe -g -pthread && ./out.exe<CR>
+autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++11 %:p -o out.exe -g -pthread && ./out.exe<CR>
 
 "https://github.com/iamcco/markdown-preview.vim/blob/master/README_cn.md
 ""let g:mkdp_path_to_chrome="chrome"
@@ -110,3 +112,6 @@ let g:tagbar_sort = 0
 
 autocmd BufEnter * let &titlestring = hostname() . '-' . expand("%:t") 
 set title
+
+" snippets
+let g:UltiSnipsExpandTrigger="<c-e>"

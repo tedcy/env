@@ -10,6 +10,8 @@ Plugin 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'iamcco/markdown-preview.vim'
 Bundle 'majutsushi/tagbar'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 
 call vundle#end()
 filetype plugin indent on

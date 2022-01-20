@@ -60,3 +60,7 @@ make install
 make package
 cd -        
 rm -rf /root/Bear
+
+#for snippets
+mkdir -pv ~/.vim/UltiSnips
+cp env/snippets/all.snippets ~/.vim/UltiSnips/
