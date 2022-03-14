@@ -63,4 +63,4 @@ rm -rf /root/Bear
 
 #for snippets
 mkdir -pv ~/.vim/UltiSnips
-cp env/snippets/all.snippets ~/.vim/UltiSnips/
+cp snippets/all.snippets ~/.vim/UltiSnips/
