@@ -6,7 +6,7 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
-Bundle 'Valloric/YouCompleteMe'
+Bundle 'tedcy/YouCompleteMe'
 
 call vundle#end()
 filetype plugin indent on
