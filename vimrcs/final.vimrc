@@ -13,7 +13,7 @@ Plugin 'iamcco/markdown-preview.vim'
 Bundle 'majutsushi/tagbar'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'ianding1/leetcode.vim'
+Plugin 'tedcy/leetcode.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -121,6 +121,7 @@ let g:UltiSnipsExpandTrigger="<c-e>"
 let g:leetcode_china=1  "中国区leetcode"
 let g:leetcode_solution_filetype='python3'    "默认使用python3"
 let g:leetcode_browser='chrome'   "登录leetcode-cn.com的浏览器"
+let g:leetcode_cookie='cookie'
 nnoremap <leader>ll :LeetCodeList<cr>
 nnoremap <leader>lt :LeetCodeTest<cr>
 nnoremap <leader>ls :LeetCodeSubmit<cr>

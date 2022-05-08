@@ -12,7 +12,7 @@ Plugin 'iamcco/markdown-preview.vim'
 Bundle 'majutsushi/tagbar'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'ianding1/leetcode.vim'
+Plugin 'tedcy/leetcode.vim'
 
 call vundle#end()
 filetype plugin indent on
