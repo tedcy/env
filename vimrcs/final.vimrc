@@ -19,6 +19,9 @@ call vundle#end()
 filetype plugin indent on
 let g:go_version_warning = 0
 
+"最大化
+nnoremap <leader>r :resize 80<CR>
+
 "高亮
 syntax on
 au BufRead,BufNewFile *.go set filetype=go
