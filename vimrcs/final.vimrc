@@ -38,6 +38,7 @@ colorscheme torte
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 nnoremap gy :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap gu :YcmCompleter GoToImprecise<CR>
+map <F9> :YcmCompleter FixIt<CR>
 
 "设置ycm debug
 let g:ycm_server_keep_logfiles = 1
