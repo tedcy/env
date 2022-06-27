@@ -31,3 +31,51 @@ int main() {
 }
 
 endsnippet
+
+snippet lc1
+#define OUT(x) cout << #x << " = " << x << endl
+#define O(x) cout << x << endl
+#define LOGV(x) "|" << #x << "=" << x << "|"
+
+template <typename IndexType, typename V>
+struct A{
+    using K = typename std::decay<decltype(declval<V>().*(declval<IndexType>()))>::type;
+    using K1 = decltype(declval<V>().*(declval<IndexType>()));
+};
+
+struct Foo {
+    string a;
+};
+
+template <typename T>
+struct C{
+    C() {
+        B<T> b;
+    };
+    template <typename K, typename fake = void>
+    struct B {
+        B() {
+            cout << "1" << endl;
+        }
+    };
+    template <typename fake>
+    struct B<int, fake> {
+        B() {
+            cout << "2" << endl;
+        }
+    };
+};
+
+endsnippet
+
+snippet lc2
+struct A1{};
+
+template <typename T>
+struct B{
+    template <typename T1 = T>
+    void set(T && t,
+            typename std::enable_if<std::is_move_constructible<T1>::value>::type* = 0) {
+    }
+};
+endsnippet
