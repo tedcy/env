@@ -45,39 +45,20 @@ flags = [
     '-Werror',
     '-std=c++11',
     '-x', 'c++',    
-    '-isystem', '/usr/include/c++/7.3.0',
-    '-isystem', '/usr/include/x86_64-linux-gnu/c++/7.3.0',
-    '-isystem', '/usr/include/c++/7.3.0/backward',
+    '-isystem', '/usr/include/c++/5',
+    '-isystem', '/usr/include/x86_64-linux-gnu/c++/5',
+    '-isystem', '/usr/include/c++/5/backward',
     '-isystem', '/usr/local/include',
     '-isystem', '/usr/include',
 ]
-compilation_database_folder = 'build'
-compilation_database_folder1 = '../build'
-compilation_database_folder2 = '../../build'
-compilation_database_folder3 = '../../../build'
-compilation_database_folder4 = '../../../../build'
-compilation_database_folder5 = '../../../../../build'
 
-if os.path.exists( compilation_database_folder ):
-  database = ycm_core.CompilationDatabase( compilation_database_folder )
-else:
-    if os.path.exists( compilation_database_folder1 ):
-        database = ycm_core.CompilationDatabase( compilation_database_folder1 )
-    else:
-        if os.path.exists( compilation_database_folder2 ):
-            database = ycm_core.CompilationDatabase( compilation_database_folder2 )
-        else:
-            if os.path.exists( compilation_database_folder3 ):
-                database = ycm_core.CompilationDatabase( compilation_database_folder3 )
-            else:
-                if os.path.exists( compilation_database_folder4 ):
-                    database = ycm_core.CompilationDatabase( compilation_database_folder4 )
-                else:
-                    if os.path.exists( compilation_database_folder5 ):
-                        database = ycm_core.CompilationDatabase( compilation_database_folder5 )
-                    else:
-                        database = None
+compilation_database_folders = ['build', '../build', '../../build', '../../../build', '../../../../build', '../../../../../build']
 
+database = None
+for compilation_database_folder in compilation_database_folders:
+    if os.path.exists( compilation_database_folder ):
+        database = ycm_core.CompilationDatabase( compilation_database_folder )
+        break
 
 def IsHeaderFile( filename ):
   extension = os.path.splitext( filename )[ 1 ]
