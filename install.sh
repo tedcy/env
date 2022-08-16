@@ -3,11 +3,6 @@ set -e
 
 #./install_go.sh
 
-#see here https://github.com/Valloric/YouCompleteMe#linux-64-bit
-if [ ! `which gcc` ];then
-    apt-get install -y build-essential cmake --allow-unauthenticated
-fi
-
 rm -rf ~/.vim/bundle/*
 mkdir -pv ~/.vim/bundle
 
@@ -71,6 +66,11 @@ cd -
 update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 rm /usr/bin/lsb_release
+
+#see here https://github.com/Valloric/YouCompleteMe#linux-64-bit
+if [ ! `which gcc` ];then
+    apt-get install -y build-essential cmake --allow-unauthenticated
+fi
 
 #vim
 rm -rf vim
