@@ -45,6 +45,7 @@ map <F9> :YcmCompleter FixIt<CR>
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 nmap <F4> :YcmToggleLogs<CR>
+nmap <F5> :YcmDebugInfo<CR>
 
 "Tab转换成空格
 set expandtab
@@ -109,8 +110,8 @@ autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++11 %:p -o out.exe -g -p
 let g:mkdp_auto_close=0
 "autocmd BufNewFile,BufRead *.md map <F7> :MarkdownPreview<CR>
 ""autocmd BufNewFile,BufRead *.md map <F8> :StopMarkdownPreview<CR>
-nmap <F5> <Plug>MarkdownPreview
-nmap <F6> <Plug>StopMarkdownPreview
+nmap <F6> <Plug>MarkdownPreview
+nmap <F7> <Plug>StopMarkdownPreview
 
 " tagbar
 map <F8> :TagbarToggle<CR>
@@ -120,12 +121,13 @@ autocmd BufEnter * let &titlestring = hostname() . '-' . expand("%:t")
 set title
 
 " snippets
-let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsExpandTrigger="<C-e>"
 
 "leetcode"
 let g:leetcode_china=1  "中国区leetcode"
 let g:leetcode_browser='chrome'   "登录leetcode-cn.com的浏览器"
 let g:leetcode_cookie='cookie'
+let g:leetcode_debug=1
 nnoremap <leader>ll :LeetCodeList<cr>
 nnoremap <leader>lt :LeetCodeTest<cr>
 nnoremap <leader>ls :LeetCodeSubmit<cr>
