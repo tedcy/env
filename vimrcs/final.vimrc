@@ -1,6 +1,7 @@
 " 不要使用vi的键盘模式，而是vim自己的
 set nocompatible
 filetype off
+set encoding=utf-8
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
