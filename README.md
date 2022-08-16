@@ -1,5 +1,9 @@
 now only support ubuntu 16.04
 
+```
+apt update && apt-get install -y git lrzsz && git clone https://github.com/tedcy/env
+```
+
 ## 1 install
 
 * run install.sh to install
