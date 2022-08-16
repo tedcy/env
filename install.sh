@@ -56,7 +56,7 @@ cd openssl-1.1.1d
 make -j 20
 make install
 cd -
-echo /root/openssl/lib/ > /etc/ld.so.conf
+echo /root/openssl/lib/ >> /etc/ld.so.conf
 ldconfig
 
 apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
