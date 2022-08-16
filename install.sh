@@ -57,7 +57,7 @@ make -j 20
 make install
 cd -
 
-apt-get install -y libffi-dev --allow-unauthenticated
+apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
 rm -rf Python-3.8.12
 if [ ! -d "vim_download" ];then
     wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
@@ -72,7 +72,9 @@ make -j 20
 make install
 cd -
 update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
+if [ -f "/usr/bin/python3.5" ];then
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
+fi
 rm /usr/bin/lsb_release
 
 #vim
