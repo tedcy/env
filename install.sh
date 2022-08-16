@@ -129,7 +129,11 @@ fi
 
 #ycm install
 cd ~/.vim/bundle/YouCompleteMe
-python3 install.py --gocode-completer --clang-completer
+if [ ! `which go` ];then
+    python3 install.py --clang-completer
+else
+    python3 install.py --gocode-completer --clang-completer
+fi
 cd -
 
 #for taglist
