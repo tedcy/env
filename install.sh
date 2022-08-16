@@ -56,6 +56,8 @@ cd openssl-1.1.1d
 make -j 20
 make install
 cd -
+echo /root/openssl/lib/ > /etc/ld.so.conf
+ldconfig
 
 apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
 rm -rf Python-3.8.12
@@ -75,7 +77,7 @@ update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 
 if [ -f "/usr/bin/python3.5" ];then
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 fi
-rm /usr/bin/lsb_release
+rm -f /usr/bin/lsb_release
 
 #vim
 rm -rf vim
