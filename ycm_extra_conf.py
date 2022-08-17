@@ -52,6 +52,20 @@ flags = [
     '-isystem', '/usr/include',
 ]
 
+import glob
+#flagsRec=['/usr/include/c++/5/*']
+flagsRec=[]
+def AddDirsRecursively( flagsRec ):
+  global flags
+  new_flags = []
+  for flag in flagsRec:
+    for d in glob.glob(flag) :
+      if os.path.isdir(d):
+            new_flags.append('-I')
+            new_flags.append(d)
+  flags += new_flags
+AddDirsRecursively( flagsRec )
+
 compilation_database_folders = ['build', '../build', '../../build', '../../../build', '../../../../build', '../../../../../build']
 
 database = None
