@@ -145,6 +145,11 @@ fi
 
 if [ "$YCMVersion" != "default" ];then
     apt-get install -y software-properties-common --allow-unauthenticated
+    if [ -f "/usr/bin/python3.5" ];then
+        if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
+            sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
+        fi
+    fi
     add-apt-repository ppa:ubuntu-toolchain-r/test
     apt-get update
     apt-get install -y g++-8
