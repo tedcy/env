@@ -7,7 +7,7 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
-Bundle 'tedcy/YouCompleteMe'
+Plugin 'tedcy/YouCompleteMe'
 
 call vundle#end()
 filetype plugin indent on

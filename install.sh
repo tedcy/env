@@ -22,6 +22,7 @@ if [ -f "vim_download.tar.gz" ];then
 fi
 
 git config --global http.sslVerify false
+#git config --global url."https://".insteadOf git://
 
 #python3.8
 #chmod 1777 /tmp
@@ -146,7 +147,7 @@ if [ "$YCMVersion" != "default" ];then
     apt-get install -y g++-8
     tar zxvf vim_download/cmake-3.16.8-Linux-x86_64.tar.gz
     mv /usr/bin/cmake /usr/bin/cmake_bk
-    cp vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake /usr/bin/cmake
+    ln -s vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake /usr/bin/cmake
 fi
 
 #ycm install
