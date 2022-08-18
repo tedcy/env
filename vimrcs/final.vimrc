@@ -15,10 +15,17 @@ Bundle 'majutsushi/tagbar'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'tedcy/leetcode.vim'
+Plugin 'yyzybb/cppenv'
 
 call vundle#end()
 filetype plugin indent on
 let g:go_version_warning = 0
+
+"grep搜索
+map gr viw;ny:grep <C-r>n *<CR><CR><C-o>:cw<CR>
+vmap gr ;ny:grep <C-r>n *<CR><CR><C-o>:cw<CR>
+map gnr viw;ny:grep <C-r>n ../* -r<CR><CR><C-o>:cw<CR>
+vmap gnr ;ny:grep <C-r>n ../* -r<CR><CR><C-o>:cw<CR>
 
 "最大化
 nnoremap <leader>r :resize 80<CR>
@@ -37,15 +44,14 @@ colorscheme torte
 
 "设置c++补全
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-nnoremap gy :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap gu :YcmCompleter GoToImprecise<CR>
+nnoremap gt :YcmCompleter GetTypeImprecise<CR>
+nnoremap gy :YcmCompleter GoToImprecise<CR>
+nnoremap gu :YcmCompleter GoToDefinitionElseDeclaration<CR>
 map <F9> :YcmCompleter FixIt<CR>
 
 "设置ycm debug
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
-nmap <F4> :YcmToggleLogs<CR>
-nmap <F5> :YcmDebugInfo<CR>
 
 "Tab转换成空格
 set expandtab
@@ -132,3 +138,11 @@ nnoremap <leader>ll :LeetCodeList<cr>
 nnoremap <leader>lt :LeetCodeTest<cr>
 nnoremap <leader>ls :LeetCodeSubmit<cr>
 nnoremap <leader>li :LeetCodeSignIn<cr>
+
+" cppenv
+au BufNewFile,BufRead * execute cppenv#dummy()
+au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto execute cppenv#infect()
+au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto set fo-=ro
+
+nnoremap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
+nnoremap <leader>yfd <Plug>(YCMFindSymbolInDocument)
