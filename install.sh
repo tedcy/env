@@ -170,11 +170,11 @@ if [ "$YCMVersion" == "c++11_last" ];then
 fi
 if [ "$YCMVersion" == "2022_8_18" ];then
     CXX=g++-8 python3 install.py --clang-completer --force-sudo $go_completer
-    cd -
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
     ldconfig
 fi
+cd -
 
 #for taglist
 apt-get install -y ctags --allow-unauthenticated
