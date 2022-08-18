@@ -16,7 +16,7 @@ mkdir -pv ~/.vim/bundle
 
 if [ -f "vim_download.tar.gz" ];then
     if ! grep -q "file:///" vimrcs/final.vimrc;then
-        sed -i "s:Plugin.*/:Plugin 'file\:///root/.vim/bundle/:" `find vimrc -name "*.vimrcs"`
+        sed -i "s:Plugin.*/:Plugin 'file\:///root/.vim/bundle/:" `find vimrcs -name "*.vimrc"`
     fi
     if [ ! -d "vim_download" ];then
         tar xzf vim_download.tar.gz
