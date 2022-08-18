@@ -195,7 +195,7 @@ cp vimrcs/final.vimrc ~/.vimrc
 #for cmake completion
 #https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
 #compdb -p build/ list > compile_commands.json  
-pip install compdb
+#pip install compdb
             
 #for make completion
 #git clone https://github.com/rizsotto/Bear /root/Bear
