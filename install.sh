@@ -81,7 +81,7 @@ update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 
 if [ -f "/usr/bin/python3.5" ];then
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 fi
-rm -f /usr/bin/lsb_release
+#rm -f /usr/bin/lsb_release
 
 #vim
 rm -rf vim
