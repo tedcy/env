@@ -120,9 +120,9 @@ vim +GoInstallBinaries -c quitall
 
 #ycm clone
 
-YCMVersion = "default"
-#YCMVersion = "2022_8_18"
-#YCMVersion = "c++11_last"
+YCMVersion="default"
+#YCMVersion="2022_8_18"
+#YCMVersion="c++11_last"
 
 pip3 install future
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
