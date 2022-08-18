@@ -144,6 +144,9 @@ if [ "$YCMVersion" != "default" ];then
     add-apt-repository ppa:ubuntu-toolchain-r/test
     apt-get update
     apt-get install -y g++-8
+    tar zxvf vim_download/cmake-3.16.8-Linux-x86_64.tar.gz
+    mv /usr/bin/cmake /usr/bin/cmake_bk
+    cp vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake /usr/bin/cmake
 fi
 
 #ycm install
