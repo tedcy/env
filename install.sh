@@ -155,7 +155,7 @@ fi
 
 #ycm install
 cd ~/.vim/bundle/YouCompleteMe
-if [ ! `which go` ];then
+if [ `which go` ];then
     go_completer="--gocode-completer"
 fi
 if [ "$YCMVersion" == "default" ];then
