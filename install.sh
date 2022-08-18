@@ -150,7 +150,7 @@ if [ "$YCMVersion" != "default" ];then
             sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
         fi
     fi
-    add-apt-repository ppa:ubuntu-toolchain-r/test
+    add-apt-repository ppa:ubuntu-toolchain-r/test | true
     apt-get update
     apt-get install -y g++-8
     tar zxvf vim_download/cmake-3.16.8-Linux-x86_64.tar.gz
