@@ -22,10 +22,10 @@ filetype plugin indent on
 let g:go_version_warning = 0
 
 "grep搜索
-map gr viw;ny:grep <C-r>n *<CR><CR><C-o>:cw<CR>
-vmap gr ;ny:grep <C-r>n *<CR><CR><C-o>:cw<CR>
-map gnr viw;ny:grep <C-r>n ../* -r<CR><CR><C-o>:cw<CR>
-vmap gnr ;ny:grep <C-r>n ../* -r<CR><CR><C-o>:cw<CR>
+map gr viw"ny:grep <C-r>n `find . -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+vmap gr "ny:grep <C-r>n find . -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+map gnr viw"ny:grep <C-r>n `find .. -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+vmap gnr "ny:grep <C-r>n `find .. -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
 
 "最大化
 nnoremap <leader>r :resize 80<CR>
