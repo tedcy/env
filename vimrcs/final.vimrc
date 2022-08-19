@@ -47,11 +47,16 @@ let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 nnoremap gt :YcmCompleter GetTypeImprecise<CR>
 nnoremap gy :YcmCompleter GoToImprecise<CR>
 nnoremap gu :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap gT <plug>(YCMHover)
 map <F9> :YcmCompleter FixIt<CR>
+nnoremap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
+nnoremap <leader>yfd <Plug>(YCMFindSymbolInDocument)
 
 "设置ycm debug
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
+
+let g:ycm_auto_hover = ''
 
 "Tab转换成空格
 set expandtab
@@ -143,6 +148,3 @@ nnoremap <leader>li :LeetCodeSignIn<cr>
 au BufNewFile,BufRead * execute cppenv#dummy()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto execute cppenv#infect()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto set fo-=ro
-
-nnoremap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
-nnoremap <leader>yfd <Plug>(YCMFindSymbolInDocument)
