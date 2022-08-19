@@ -50,7 +50,7 @@ rm -rf openssl-1.1.1d
 rm -rf /root/openssl
 if [ ! -d "vim_download" ];then
     wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
-    tar xvf openssl-1.1.1d.tar.gz
+    tar xzf openssl-1.1.1d.tar.gz
     rm -rf openssl-1.1.1d.tar.gz
 else
     cp -r vim_download/openssl-1.1.1d .
@@ -67,7 +67,7 @@ apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
 rm -rf Python-3.8.12
 if [ ! -d "vim_download" ];then
     wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
-    tar xvf Python-3.8.12.tar.xz
+    tar xzf Python-3.8.12.tar.xz
     rm -rf Python-3.8.12.tar.xz
 else
     cp -r vim_download/Python-3.8.12 .
@@ -148,13 +148,14 @@ if [ "$YCMVersion" != "default" ];then
     if [ -f "/usr/bin/python3.5" ];then
         if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
             sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
+            sed -i "s:python3:python3.5:" /usr/bin/lsb_release
         fi
     fi
-    add-apt-repository ppa:ubuntu-toolchain-r/test | true
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test | true
     apt-get update
     apt-get install -y g++-8
     cd vim_download
-    tar zxvf cmake-3.16.8-Linux-x86_64.tar.gz
+    tar xzf cmake-3.16.8-Linux-x86_64.tar.gz
     cd -
     mv /usr/bin/cmake /usr/bin/cmake_bk
     ln -s /root/env/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake /usr/bin/cmake
