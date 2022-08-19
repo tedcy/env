@@ -5,7 +5,7 @@ docker pull ubuntu:16.04
 
 mount_dirs="-v /data/xxx:/root"
 
-docker run -it --privileged --cap-add sys_ptrace $mount_dirs -w /root --ulimit nofile=1024 -m 40G -p 9497:22 -e LANG=zh_CN.UTF-8 --name $dockername  ubuntu:16.04
+docker run -it --privileged --cap-add sys_ptrace $mount_dirs -w /root --ulimit nofile=1024 -m 40G -p 9497:22 -e LANG=zh_CN.UTF-8 -e LC_ALL=C --name $dockername  ubuntu:16.04
 
 apt update && apt-get install -y git lrzsz ssh && git clone https://github.com/tedcy/env
 
