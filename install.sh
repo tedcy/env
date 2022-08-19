@@ -109,13 +109,15 @@ cd -
 #vundle
 if [ ! -d "vim_download" ];then
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    cp vimrcs/vundle.vimrc ~/.vimrc
+    vim +PluginInstall -c quitall
 fi
-cp vimrcs/vundle.vimrc ~/.vimrc
-vim +PluginInstall -c quitall
 
 #vim-go
 cp vimrcs/vim-go.vimrc ~/.vimrc
-vim +PluginInstall -c quitall
+if [ ! -d "vim_download" ];then
+    vim +PluginInstall -c quitall
+fi
 vim +GoInstallBinaries -c quitall
 
 #ycm clone
@@ -127,8 +129,8 @@ YCMVersion="default"
 pip3 install future
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
 cp vimrcs/ycm.vimrc ~/.vimrc
-vim +PluginInstall -c quitall
 if [ ! -d "vim_download" ];then
+    vim +PluginInstall -c quitall
     cd ~/.vim/bundle/YouCompleteMe
     git submodule update --init --recursive
     cd -
@@ -169,21 +171,19 @@ fi
 if [ "$YCMVersion" == "default" ];then
     python3 install.py --clang-completer $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
-    echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
-    ldconfig
 fi
 if [ "$YCMVersion" == "c++11_last" ];then
-    git reset --hard 4e480a317d4858db91631c14883c5927243d4893
     CXX=g++-8 EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu' python3 install.py \
-        --clang-completer --system-libclang --force-sudo $go_completer
+        --clang-completer --system-libclang $go_completer
+    echo "/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu/lib" >> /etc/ld.so.conf
 fi
 if [ "$YCMVersion" == "2022_8_18" ];then
     CXX=g++-8 python3 install.py --clang-completer --force-sudo $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
-    echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
-    ldconfig
 fi
 cd -
+echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
+ldconfig
 
 #for taglist
 apt-get install -y ctags --allow-unauthenticated
@@ -192,9 +192,11 @@ apt-get install -y ctags --allow-unauthenticated
 pip3 install pynvim
 
 #other install
-cp vimrcs/other.vimrc ~/.vimrc                  
-vim +PluginInstall -c quitall                   
-       
+if [ ! -d "vim_download" ];then
+    cp vimrcs/other.vimrc ~/.vimrc                  
+    vim +PluginInstall -c quitall                   
+fi
+
 #cp .ycm_extra_conf.py
 cp ycm_extra_conf.py ~/.ycm_extra_conf.py       
        
