@@ -173,8 +173,9 @@ if [ "$YCMVersion" == "default" ];then
     ldconfig
 fi
 if [ "$YCMVersion" == "c++11_last" ];then
+    git reset --hard 4e480a317d4858db91631c14883c5927243d4893
     CXX=g++-8 EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu' python3 install.py \
-        --clang-completer --system-libclang $go_completer
+        --clang-completer --system-libclang --force-sudo $go_completer
 fi
 if [ "$YCMVersion" == "2022_8_18" ];then
     CXX=g++-8 python3 install.py --clang-completer --force-sudo $go_completer
