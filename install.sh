@@ -125,8 +125,8 @@ vim +GoInstallBinaries -c quitall
 #ycm clone
 
 #YCMVersion="default"
-YCMVersion="2022_8_18"
-#YCMVersion="c++11_last"
+#YCMVersion="2022_8_18"
+YCMVersion="c++11_last"
 
 apt-get install -y software-properties-common lsb-core --allow-unauthenticated
 if [ -f "/usr/bin/python3.5" ];then
@@ -168,7 +168,7 @@ fi
 #ycm install
 cd ~/.vim/bundle/YouCompleteMe
 if [ `which go` ];then
-    go_completer="--gocode-completer"
+    go_completer=""#"--gocode-completer"
 fi
 if [ "$YCMVersion" == "default" ];then
     python3 install.py --clang-completer $go_completer
@@ -176,11 +176,11 @@ if [ "$YCMVersion" == "default" ];then
 fi
 if [ "$YCMVersion" == "c++11_last" ];then
     CXX=g++-8 EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu' python3 install.py \
-        --clang-completer --system-libclang $go_completer
+        --clang-completer --system-libclang --verbose $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu/lib" >> /etc/ld.so.conf
 fi
 if [ "$YCMVersion" == "2022_8_18" ];then
-    CXX=g++-8 python3 install.py --clang-completer --force-sudo $go_completer
+    CXX=g++-8 python3 install.py --clang-completer --force-sudo --verbose $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
 fi
 cd -
