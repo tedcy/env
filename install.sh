@@ -3,6 +3,8 @@ set -e
 
 #./install_go.sh
 
+sudo chmod 1777 /tmp
+
 if [ ! `which wget` ];then
     apt-get install -y wget --allow-unauthenticated
 fi
@@ -154,7 +156,7 @@ fi
 
 if [ "$YCMVersion" != "default" ];then
     add-apt-repository -y ppa:ubuntu-toolchain-r/test | true
-    apt-get update
+    apt-get update | true
     apt-get install -y g++-8
     cd vim_download
     tar xzf cmake-3.16.8-Linux-x86_64.tar.gz
