@@ -122,10 +122,17 @@ vim +GoInstallBinaries -c quitall
 
 #ycm clone
 
-YCMVersion="default"
-#YCMVersion="2022_8_18"
+#YCMVersion="default"
+YCMVersion="2022_8_18"
 #YCMVersion="c++11_last"
 
+apt-get install -y software-properties-common lsb-core allow-unauthenticated
+if [ -f "/usr/bin/python3.5" ];then
+    if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
+        sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
+        sed -i "s:python3:python3.5:" /usr/bin/lsb_release
+    fi
+fi
 pip3 install future
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
 cp vimrcs/ycm.vimrc ~/.vimrc
@@ -146,13 +153,6 @@ else
 fi
 
 if [ "$YCMVersion" != "default" ];then
-    apt-get install -y software-properties-common --allow-unauthenticated
-    if [ -f "/usr/bin/python3.5" ];then
-        if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
-            sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
-            sed -i "s:python3:python3.5:" /usr/bin/lsb_release
-        fi
-    fi
     add-apt-repository -y ppa:ubuntu-toolchain-r/test | true
     apt-get update
     apt-get install -y g++-8
