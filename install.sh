@@ -126,7 +126,7 @@ vim +GoInstallBinaries -c quitall
 YCMVersion="2022_8_18"
 #YCMVersion="c++11_last"
 
-apt-get install -y software-properties-common lsb-core allow-unauthenticated
+apt-get install -y software-properties-common lsb-core --allow-unauthenticated
 if [ -f "/usr/bin/python3.5" ];then
     if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
         sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
