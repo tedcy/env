@@ -3,6 +3,12 @@ set -e
 
 #./install_go.sh
 
+envPath='/root/env'
+buildPath='build'
+
+rm -rf $buildPath
+mkdir -pv $buildPath
+
 sudo chmod 1777 /tmp
 
 if [ ! `which wget` ];then
@@ -16,9 +22,10 @@ fi
 rm -rf ~/.vim/bundle/*
 mkdir -pv ~/.vim/bundle
 
+cp -r vimrcs $buildPath
 if [ -f "vim_download.tar.gz" ];then
-    if ! grep -q "file:///" vimrcs/final.vimrc;then
-        sed -i "s:Plugin.*/:Plugin 'file\:///root/.vim/bundle/:" `find vimrcs -name "*.vimrc"`
+    if ! grep -q "file:///" $buildPath/vimrcs/final.vimrc;then
+        sed -i "s:Plugin.*/:Plugin 'file\:///root/.vim/bundle/:" `find $buildPath/vimrcs -name "*.vimrc"`
     fi
     if [ ! -d "vim_download" ];then
         tar xzf vim_download.tar.gz
@@ -48,37 +55,34 @@ git config --global http.sslVerify false
 ##fi
 #python3 get-pip.py
 
-rm -rf openssl-1.1.1d
-rm -rf /root/openssl
 if [ ! -d "vim_download" ];then
     wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
     tar xzf openssl-1.1.1d.tar.gz
     rm -rf openssl-1.1.1d.tar.gz
 else
-    cp -r vim_download/openssl-1.1.1d .
+    cp -r vim_download/openssl-1.1.1d $buildPath
 fi
-cd openssl-1.1.1d
-./config --prefix=/root/openssl --openssldir=/root/openssl
+cd $buildPath/openssl-1.1.1d
+./config --prefix=$buildPath/openssl --openssldir=$buildPath/openssl
 make -j 20
 make install
-cd -
-echo "/root/openssl/lib/" >> /etc/ld.so.conf
+cd $envPath
+echo $buildPath"/openssl/lib/" >> /etc/ld.so.conf
 ldconfig
 
 apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
-rm -rf Python-3.8.12
 if [ ! -d "vim_download" ];then
     wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
     tar xzf Python-3.8.12.tar.xz
     rm -rf Python-3.8.12.tar.xz
 else
-    cp -r vim_download/Python-3.8.12 .
+    cp -r vim_download/Python-3.8.12 $buildPath
 fi
-cd Python-3.8.12
-./configure --prefix=/usr/local --with-openssl=/root/openssl --enable-shared
+cd $buildPath/Python-3.8.12
+./configure --prefix=/usr/local --with-openssl=$buildPath/openssl --enable-shared
 make -j 20
 make install
-cd -
+cd $envPath
 update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
 if [ -f "/usr/bin/python3.5" ];then
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
@@ -86,16 +90,15 @@ fi
 #rm -f /usr/bin/lsb_release
 
 #vim
-rm -rf vim
 #apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev libgtk2.0-dev libatk1.0-dev \
 #    libbonoboui2-dev libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev --allow-unauthenticated
 apt-get install -y libncurses5-dev libbonoboui2-dev --allow-unauthenticated
 if [ ! -d "vim_download" ];then
     git clone https://github.com/vim/vim.git
 else
-    cp -r vim_download/vim .
+    cp -r vim_download/vim $buildPath/vim
 fi
-cd vim
+cd $buildPath/vim
 git checkout v8.2.4897
 ./configure --with-features=huge \
 	--enable-multibyte \
@@ -106,17 +109,17 @@ git checkout v8.2.4897
 	--prefix=/usr/local
 make -j 20
 make install
-cd -
+cd $envPath
 
 #vundle
 if [ ! -d "vim_download" ];then
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    cp vimrcs/vundle.vimrc ~/.vimrc
+    cp $buildPath/vimrcs/vundle.vimrc ~/.vimrc
     vim +PluginInstall -c quitall
 fi
 
 #vim-go
-cp vimrcs/vim-go.vimrc ~/.vimrc
+cp $buildPath/vimrcs/vim-go.vimrc ~/.vimrc
 if [ ! -d "vim_download" ];then
     vim +PluginInstall -c quitall
 fi
@@ -135,20 +138,24 @@ if [ -f "/usr/bin/python3.5" ];then
         sed -i "s:python3:python3.5:" /usr/bin/lsb_release
     fi
 fi
-pip3 install future
+for i in {1...10}
+do
+    pip3 install future
+done
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
-cp vimrcs/ycm.vimrc ~/.vimrc
+cp $buildPath/vimrcs/ycm.vimrc ~/.vimrc
 if [ ! -d "vim_download" ];then
     vim +PluginInstall -c quitall
     cd ~/.vim/bundle/YouCompleteMe
     git submodule update --init --recursive
-    cd -
+    cd $envPath
 fi
 
 #ycm install
 cd ~/.vim/bundle/YouCompleteMe
 if [ `which go` ];then
-    go_completer=""#"--gocode-completer"
+    #go_completer="--gocode-completer"
+    go_completer=""
 fi
 if [ "$YCMVersion" == "default" ];then
     if [ -d "vim_download" ];then
@@ -163,12 +170,12 @@ if [ "$YCMVersion" == "c++11_last" ];then
     add-apt-repository -y ppa:ubuntu-toolchain-r/test | true
     apt-get update | true
     apt-get install -y g++-8
-    cd ~/env/vim_download
+    cd $envPath/vim_download
     tar xzf cmake-3.16.8-Linux-x86_64.tar.gz
     cd -
 
     CXX=g++-8 EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu' python3 install.py \
-        --clang-completer --system-libclang --cmake-path='/root/env/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
+        --clang-completer --system-libclang --cmake-path=$envPath'/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu/lib" >> /etc/ld.so.conf
     ldconfig
 fi
@@ -182,9 +189,9 @@ if [ "$YCMVersion" == "2022_8_18" ];then
     #echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
     #ldconfig
     python3 install.py --clangd-completer --force-sudo --verbose $go_completer
-    echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin'" >> vimrcs/final.vimrc
+    echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin'" >> $buildPath/vimrcs/final.vimrc
 fi
-cd -
+cd $envPath
 
 #for taglist
 apt-get install -y ctags --allow-unauthenticated
@@ -194,7 +201,7 @@ pip3 install pynvim
 
 #other install
 if [ ! -d "vim_download" ];then
-    cp vimrcs/other.vimrc ~/.vimrc                  
+    cp $buildPath/vimrcs/other.vimrc ~/.vimrc                  
     vim +PluginInstall -c quitall                   
 fi
 
@@ -202,7 +209,7 @@ fi
 cp ycm_extra_conf.py ~/.ycm_extra_conf.py       
        
 #final vimrc
-cp vimrcs/final.vimrc ~/.vimrc
+cp $buildPath/vimrcs/final.vimrc ~/.vimrc
             
 #for cmake completion
 #https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
