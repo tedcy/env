@@ -140,7 +140,7 @@ if [ -f "/usr/bin/python3.5" ];then
 fi
 for i in {1...10}
 do
-    pip3 install future
+    pip3 install future | true
 done
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
 cp $buildPath/vimrcs/ycm.vimrc ~/.vimrc
