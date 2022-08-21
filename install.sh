@@ -4,7 +4,7 @@ set -e
 #./install_go.sh
 
 envPath='/root/env'
-buildPath='build'
+buildPath=$envPath/'build'
 
 rm -rf $buildPath
 mkdir -pv $buildPath
@@ -94,7 +94,7 @@ fi
 #    libbonoboui2-dev libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev --allow-unauthenticated
 apt-get install -y libncurses5-dev libbonoboui2-dev --allow-unauthenticated
 if [ ! -d "vim_download" ];then
-    git clone https://github.com/vim/vim.git
+    git clone https://github.com/vim/vim.git $buildPath/vim
 else
     cp -r vim_download/vim $buildPath/vim
 fi
