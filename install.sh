@@ -163,7 +163,7 @@ if [ "$YCMVersion" == "c++11_last" ];then
     add-apt-repository -y ppa:ubuntu-toolchain-r/test | true
     apt-get update | true
     apt-get install -y g++-8
-    cd vim_download
+    cd ~/env/vim_download
     tar xzf cmake-3.16.8-Linux-x86_64.tar.gz
     cd -
 
