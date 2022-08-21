@@ -157,7 +157,6 @@ if [ "$YCMVersion" == "default" ];then
     fi
     python3 install.py --clang-completer $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
-    echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
     ldconfig
 fi
 if [ "$YCMVersion" == "c++11_last" ];then
@@ -171,7 +170,6 @@ if [ "$YCMVersion" == "c++11_last" ];then
     CXX=g++-8 EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu' python3 install.py \
         --clang-completer --system-libclang --cmake-path='/root/env/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
     echo "/root/.vim/bundle/YouCompleteMe/clang+llvm-10.0.0-x86_64-unknown-linux-gnu/lib" >> /etc/ld.so.conf
-    echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
     ldconfig
 fi
 if [ "$YCMVersion" == "2022_8_18" ];then
@@ -182,7 +180,6 @@ if [ "$YCMVersion" == "2022_8_18" ];then
     #cp vim_download/YouCompleteMe_$YCMVersion/libclang* ~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives/
     #CXX=g++-8 python3 install.py --clang-completer --force-sudo --verbose $go_completer
     #echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
-    #echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd" >> /etc/ld.so.conf
     #ldconfig
     python3 install.py --clangd-completer --force-sudo --verbose $go_completer
     echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin'" >> vimrcs/final.vimrc
