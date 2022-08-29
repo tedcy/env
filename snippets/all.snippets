@@ -16,12 +16,13 @@ snippet cpptest
 #include <iomanip>
 #include <map>
 #include <set>
+#include <limits.h>
+#include <memory>
+#include <queue>
+#include <cmath>
 
 using namespace std;
 using namespace std::chrono;
-
-#define OUT(x) cout << #x << " = " << x << endl
-#define O(x) cout << x << endl
 
 namespace test_log{
     template<typename T, typename... Args>
@@ -97,7 +98,8 @@ namespace test_log{
         cout << endl;
     }
 
-#define LOGV(x) "|" , #x , "=" , x ,"|"
+#define LOGVT(x) "|" , #x , "=" , x ,"|"
+#define LOGV(x) "|" << #x << "=" << x << "|"
 #ifdef LOG_TAG
     #define LDEBUG(...) test_log::log_debug({__VA_ARGS__})
 #else
@@ -105,8 +107,45 @@ namespace test_log{
 #endif
 }
 
-struct Timer { Timer() : tp(system_clock::now()) {} virtual ~Timer() { auto dur = system_clock::now() - tp; O("Cost " << duration_cast<milliseconds>(dur).count() << " ms"); } system_clock::time_point tp; };
-struct Bench : public Timer { Bench() : val(0) {} virtual ~Bench() { stop(); } void stop() { auto dur = system_clock::now() - tp; O("Per op: " << duration_cast<nanoseconds>(dur).count() / std::max(val, 1L) << " ns"); auto perf = (double)val / duration_cast<milliseconds>(dur).count() / 10; if (perf < 1) O("Performance: " << std::setprecision(3) << perf << " w/s"); else O("Performance: " << perf << " w/s"); } Bench& operator++() { ++val; return *this; } Bench& operator++(int) { ++val; return *this; } Bench& add(long v) { val += v; return *this; } long val; };
+struct Timer {
+    Timer() = default;
+    Timer(const string& name) : name_(name + ":") {} 
+    virtual ~Timer() { 
+        auto dur = system_clock::now() - tp;
+        cout << setiosflags(ios::left) << std::setw(20) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
+    } 
+    string name_;
+    system_clock::time_point tp = system_clock::now(); 
+};
+struct Bench : public Timer { 
+    Bench() = default;
+    Bench(const string& name) : Timer(name) {} 
+    virtual ~Bench() { stop(); }
+    void stop() { 
+        auto dur = system_clock::now() - tp; 
+        cout << setiosflags(ios::left) << std::setw(20) << name_ <<
+            "Per op: " << duration_cast<nanoseconds>(dur).count() / std::max(val, 1L) << " ns" << endl; 
+        auto perf = (double)val / duration_cast<milliseconds>(dur).count() / 10; 
+        if (perf < 1) {
+            cout << setiosflags(ios::left) << std::setw(20) << name_ <<
+            "Performance: " << std::setprecision(3) << perf << " w/s" << endl; 
+        }else {
+            cout << setiosflags(ios::left) << std::setw(20) << name_ <<
+            "Performance: " << perf << " w/s" << endl; 
+        }
+    } 
+    Bench& operator++() { ++val; return *this; } 
+    Bench& operator++(int) { ++val; return *this; } 
+    Bench& add(long v) { val += v; return *this; } 
+    long val = 0; 
+};
+
+int64_t TNOWMS() {
+    std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+    return ms.count();
+}
 
 int main() {
 
