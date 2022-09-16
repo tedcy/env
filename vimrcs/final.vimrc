@@ -47,10 +47,10 @@ let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 nnoremap gt :YcmCompleter GetTypeImprecise<CR>
 nnoremap gy :YcmCompleter GoToImprecise<CR>
 nnoremap gu :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap gT <plug>(YCMHover)
+nnoremap gh <plug>(YCMHover)
 map <F9> :YcmCompleter FixIt<CR>
-nnoremap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
-nnoremap <leader>yfd <Plug>(YCMFindSymbolInDocument)
+nnoremap gf <Plug>(YCMFindSymbolInDocument)
+nnoremap gfw <Plug>(YCMFindSymbolInWorkspace)
 
 "设置ycm debug
 let g:ycm_server_keep_logfiles = 1
