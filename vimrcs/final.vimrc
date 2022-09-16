@@ -7,6 +7,8 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'fatih/vim-go'
 "Plugin 'vim-scripts/taglist.vim'
 Plugin 'tedcy/YouCompleteMe'
@@ -44,10 +46,10 @@ colorscheme torte
 
 "设置c++补全
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-nnoremap gt :YcmCompleter GetTypeImprecise<CR>
+"nnoremap gt :YcmCompleter GetTypeImprecise<CR>
 nnoremap gy :YcmCompleter GoToImprecise<CR>
 nnoremap gu :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap gh <plug>(YCMHover)
+nnoremap gt <plug>(YCMHover)
 map <F9> :YcmCompleter FixIt<CR>
 nnoremap gf <Plug>(YCMFindSymbolInDocument)
 nnoremap gfw <Plug>(YCMFindSymbolInWorkspace)
@@ -148,3 +150,10 @@ nnoremap <leader>li :LeetCodeSignIn<cr>
 au BufNewFile,BufRead * execute cppenv#dummy()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto execute cppenv#infect()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto set fo-=ro
+
+" 配色方案
+set background=dark
+set termguicolors
+colorscheme solarized8_dark_high
+"colorscheme gruvbox
+"colorscheme molokai
