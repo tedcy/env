@@ -137,6 +137,13 @@ if [ -f "/usr/bin/python3.5" ];then
         sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
         sed -i "s:python3:python3.5:" /usr/bin/lsb_release
     fi
+else
+    if [ -f "/usr/bin/python3.8" ];then
+        if ! grep -q "python3.8" /usr/bin/add-apt-repository;then
+            sed -i "s:python3:python3.8:" /usr/bin/add-apt-repository
+            sed -i "s:python3:python3.8:" /usr/bin/lsb_release
+        fi
+    fi
 fi
 for i in {1...10}
 do
