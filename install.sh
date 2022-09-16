@@ -70,7 +70,7 @@ cd $envPath
 echo $buildPath"/openssl/lib/" >> /etc/ld.so.conf
 ldconfig
 
-apt-get install -y libffi-dev zlib1g-dev --allow-unauthenticated
+apt-get install -y libffi-dev zlib1g-dev libbz2-dev --allow-unauthenticated
 if [ ! -d "vim_download" ];then
     wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
     tar xzf Python-3.8.12.tar.xz
@@ -195,7 +195,7 @@ if [ "$YCMVersion" == "2022_8_18" ];then
     #CXX=g++-8 python3 install.py --clang-completer --force-sudo --verbose $go_completer
     #echo "/root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clang/lib" >> /etc/ld.so.conf
     #ldconfig
-    python3 install.py --clangd-completer --force-sudo --verbose $go_completer
+    python3 install.py --clangd-completer --force-sudo --verbose --cmake-path=$envPath'/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
     echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin'" >> $buildPath/vimrcs/final.vimrc
 fi
 cd $envPath
