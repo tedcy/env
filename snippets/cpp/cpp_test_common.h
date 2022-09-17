@@ -19,6 +19,7 @@
 #include <memory>
 #include <queue>
 #include <cmath>
+#include <functional>
 
 using namespace std;
 using namespace std::chrono;
@@ -154,10 +155,11 @@ int64_t TNOWMS() {
 #include <gperftools/heap-checker.h>
 #endif
 
-struct MemoryUsedHolder {
+namespace memory {
+struct UsedHolder {
     static int64_t memoryUsed;
     static bool isStart;
-    MemoryUsedHolder() 
+    UsedHolder() 
 #ifdef MEM_GPERF_TAG
         : heap_checker_(__FUNCTION__) 
 #endif
@@ -173,7 +175,7 @@ struct MemoryUsedHolder {
         cout << LOGV(memoryUsed) << endl;
         isStart = true;
     }
-    ~MemoryUsedHolder() {
+    ~UsedHolder() {
 #ifdef MEM_GPERF_TAG
         if (!heap_checker_.NoLeaks()) assert(NULL == "heap memory leak");
 #endif
@@ -188,22 +190,23 @@ struct MemoryUsedHolder {
 #endif
 };
 
-int64_t MemoryUsedHolder::memoryUsed = 0;
-bool MemoryUsedHolder::isStart = false;
+int64_t UsedHolder::memoryUsed = 0;
+bool UsedHolder::isStart = false;
+}
 
 #ifdef MEM_TAG
 void* malloc(size_t sz) {
     static auto my_malloc = (void* (*)(size_t))dlsym(RTLD_NEXT, "malloc");
     auto ptr = my_malloc(sz);
-    if (MemoryUsedHolder::isStart) {
-        MemoryUsedHolder::memoryUsed += malloc_usable_size(ptr);
+    if (memory::UsedHolder::isStart) {
+        memory::UsedHolder::memoryUsed += malloc_usable_size(ptr);
     }
     return ptr;
 }
 void free(void *ptr) {
     static auto my_free = (void (*)(void*))dlsym(RTLD_NEXT, "free");
-    if (MemoryUsedHolder::isStart) {
-        MemoryUsedHolder::memoryUsed -= malloc_usable_size(ptr);
+    if (memory::UsedHolder::isStart) {
+        memory::UsedHolder::memoryUsed -= malloc_usable_size(ptr);
     }
     return my_free(ptr);
 }

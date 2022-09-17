@@ -4,7 +4,7 @@ export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 alias gg='g++ -std=c++11 -o out.exe -g -pthread -O2'
 alias ggd='g++ -std=c++11 -o out.exe -g -pthread -D LOG_TAG'
 alias ggm='g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ldl -pthread -O2 -D MEM_TAG'
-alias ggmg='g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D MEM_GPERF_TAG'
+alias ggmg='echo "HEAPCHECK=local ./out.exe or HEAPCHECK=draconian ./out.exe" && g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D MEM_GPERF_TAG'
 alias gpush='git add -u && git commit -m '1' && git pull -r && git push'
 
 export LANG=LANG="zh_CN.utf-8"
