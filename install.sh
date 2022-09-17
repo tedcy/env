@@ -240,3 +240,5 @@ apt-get install -y bear --allow-unauthenticated
 #for snippets
 mkdir -pv ~/.vim/UltiSnips
 cp snippets/all.snippets ~/.vim/UltiSnips/
+
+echo "记得bash/set_shell.sh来设置shell"

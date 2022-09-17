@@ -12,10 +12,6 @@ set convert-meta off
 set input-meta on
 set output-meta on' >> ~/.inputrc
 
-echo 'export LANG=LANG="zh_CN.utf-8"
-export LANGUAGE="zh_CN:zh:en_US:en"
-export LC_ALL="zh_CN.utf-8"' >> ~/.bashrc
-
 echo 'if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
