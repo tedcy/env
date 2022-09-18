@@ -241,4 +241,14 @@ apt-get install -y bear --allow-unauthenticated
 mkdir -pv ~/.vim/UltiSnips
 cp snippets/all.snippets ~/.vim/UltiSnips/
 
+#for gperftools
+apt-get install -y google-perftools google-perftools-devel libunwind8 libunwind-dev --allow-unauthenticated
+if [ ! -d "~/FlameGraph" ];then
+    if [ ! -d "vim_download" ];then
+        git clone https://github.com/brendangregg/FlameGraph -o ~/FlameGraph
+    else
+        cp -r vim_download/FlameGraph ~/
+    fi
+fi
+
 echo "记得bash/set_shell.sh来设置shell"

@@ -156,6 +156,11 @@ int64_t TNOWMS() {
 #endif
 
 namespace memory {
+    struct CoutHelper {
+        CoutHelper() {
+            setvbuf(stdout, NULL, _IONBF, 0);
+        }
+    };
 struct UsedHolder {
     static int64_t memoryUsed;
     static bool isStart;
@@ -192,6 +197,7 @@ struct UsedHolder {
 
 int64_t UsedHolder::memoryUsed = 0;
 bool UsedHolder::isStart = false;
+static CoutHelper helper;
 }
 
 #ifdef MEM_TAG
