@@ -1,3 +1,10 @@
+[ -z "$PS1" ] && return
+
+# force ignoredups and ignorespace
+export HISTCONTROL=ignoreboth
+# append to the history file, don't overwrite it
+shopt -s histappend
+
 alias ls='ls -F --show-control-chars --color=auto'
 eval `dircolors -b ~/.dir_colors`
 export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -12,7 +19,16 @@ google-pprof ./out.exe "/tmp/out.exe.$1._main_-end.heap" --inuse_objects --lines
 /root/FlameGraph/flamegraph.pl /tmp/out.data > /tmp/out.svg && \
 echo "output /tmp/out.svg"
 }; _f'
+alias ll='ls -l'
+
+# git
 alias gpush='git add -u && git commit -m '1' && git pull -r && git push'
+alias ghelp='echo "查询两个分支的共同祖先commit: 
+git merge-base branch1 branch2
+合并多个commit到一个: 
+git rebase -i commit-id
+然后选择commit前pick为合并 https://cloud.tencent.com/developer/article/1491814
+"'
 
 export LANG=LANG="zh_CN.utf-8"
 export LANGUAGE="zh_CN:zh:en_US:en"
