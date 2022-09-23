@@ -23,6 +23,7 @@ alias ll='ls -l'
 
 # git
 alias gpush='git add -u && git commit -m '1' && git pull -r && git push'
+alias gstatus='git status -uno'
 alias ghelp='echo "查询两个分支的共同祖先commit: 
 git merge-base branch1 branch2
 合并多个commit到一个: 
