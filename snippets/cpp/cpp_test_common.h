@@ -151,21 +151,21 @@ int64_t TNOWMS() {
 #include <dlfcn.h>
 #include <malloc.h>
 
-#ifdef MEM_GPERF_TAG
+#ifdef GPERF_TAG
 #include <gperftools/heap-checker.h>
 #endif
 
-namespace memory {
+namespace profile {
     struct CoutHelper {
         CoutHelper() {
             setvbuf(stdout, NULL, _IONBF, 0);
         }
     };
-struct UsedHolder {
+struct MemoryHolder {
     static int64_t memoryUsed;
     static bool isStart;
-    UsedHolder() 
-#ifdef MEM_GPERF_TAG
+    MemoryHolder() 
+#ifdef GPERF_TAG
         : heap_checker_(__FUNCTION__) 
 #endif
     {
@@ -173,15 +173,15 @@ struct UsedHolder {
         memoryUsed = 0;
     }
     void print() {
-#ifdef MEM_GPERF_TAG
+#ifdef GPERF_TAG
         HeapLeakChecker::Disabler disabler;
 #endif
         isStart = false;
         cout << LOGV(memoryUsed) << endl;
         isStart = true;
     }
-    ~UsedHolder() {
-#ifdef MEM_GPERF_TAG
+    ~MemoryHolder() {
+#ifdef GPERF_TAG
         if (!heap_checker_.NoLeaks()) assert(NULL == "heap memory leak");
 #endif
         isStart = false;
@@ -190,13 +190,34 @@ struct UsedHolder {
         }
         memoryUsed = 0;
     }
-#ifdef MEM_GPERF_TAG
+#ifdef GPERF_TAG
     HeapLeakChecker heap_checker_;
 #endif
 };
 
-int64_t UsedHolder::memoryUsed = 0;
-bool UsedHolder::isStart = false;
+int64_t MemoryHolder::memoryUsed = 0;
+bool MemoryHolder::isStart = false;
+    
+#ifdef GPERF_TAG
+#include <gperftools/profiler.h>
+#endif
+
+struct CpuHolder {
+    CpuHolder() {
+#ifdef GPERF_TAG
+        string profName = "/tmp/";
+        profName += __FUNCTION__;
+        profName += ".prof";
+        ProfilerStart(profName.c_str());
+#endif
+    }
+    ~CpuHolder() {
+#ifdef GPERF_TAG
+        ProfilerStop();
+#endif
+    }
+};
+
 static CoutHelper helper;
 }
 
@@ -204,15 +225,15 @@ static CoutHelper helper;
 void* malloc(size_t sz) {
     static auto my_malloc = (void* (*)(size_t))dlsym(RTLD_NEXT, "malloc");
     auto ptr = my_malloc(sz);
-    if (memory::UsedHolder::isStart) {
-        memory::UsedHolder::memoryUsed += malloc_usable_size(ptr);
+    if (profile::MemoryHolder::isStart) {
+        profile::MemoryHolder::memoryUsed += malloc_usable_size(ptr);
     }
     return ptr;
 }
 void free(void *ptr) {
     static auto my_free = (void (*)(void*))dlsym(RTLD_NEXT, "free");
-    if (memory::UsedHolder::isStart) {
-        memory::UsedHolder::memoryUsed -= malloc_usable_size(ptr);
+    if (profile::MemoryHolder::isStart) {
+        profile::MemoryHolder::memoryUsed -= malloc_usable_size(ptr);
     }
     return my_free(ptr);
 }
