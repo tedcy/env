@@ -66,18 +66,43 @@ def AddDirsRecursively( flagsRec ):
   flags += new_flags
 AddDirsRecursively( flagsRec )
 
-compilation_database_folders = ['build', '../build', '../../build', '../../../build', '../../../../build', '../../../../../build']
+compilation_database_folders = ['.', '../', '../../', '../../../', '../../../../', '../../../../../']
 
-database = None
-for compilation_database_folder in compilation_database_folders:
-    if os.path.exists( compilation_database_folder ):
-        database = ycm_core.CompilationDatabase( compilation_database_folder )
-        break
+isClangd = False
+try:
+    database = ycm_core.CompilationDatabase('')
+except:
+    isClangd = True
+
+if isClangd == False:
+    database = None
+    for compilation_database_folder in compilation_database_folders:
+        path = os.path.join( compilation_database_folder, 'build')
+        if os.path.exists( path ):
+            database = ycm_core.CompilationDatabase( path )
+            break
+else:
+    cmake_commands = None
+    for compilation_database_folder in compilation_database_folders:
+        path = os.path.join( compilation_database_folder, 'build', 'compile_commands.json')
+        if os.path.exists( path ):
+            cmake_commands = path
+            break
+        ycm_navigation = os.path.join( compilation_database_folder, 'ycm_navigation')
+        if os.path.exists( ycm_navigation ):
+            with open(ycm_navigation, 'r') as f:
+                path = f.readline()
+                path = path.rstrip('\n')
+                path = os.path.join( path, 'compile_commands.json')
+                if os.path.exists( path ):
+                    cmake_commands = path
+                    break
+                else:
+                    raise RuntimeError(path)
 
 def IsHeaderFile( filename ):
   extension = os.path.splitext( filename )[ 1 ]
   return extension in [ '.h', '.hxx', '.hpp', '.hh' ]
-
 
 def FindCorrespondingSourceFile( filename ):
   if IsHeaderFile( filename ):
@@ -91,6 +116,19 @@ def FindCorrespondingSourceFile( filename ):
 
 def Settings( **kwargs ):
   if kwargs[ 'language' ] == 'cfamily':
+    if isClangd:
+        if cmake_commands:
+            return {
+                'ls': {
+                'compilationDatabasePath': os.path.dirname( cmake_commands )
+                }
+            }
+        filename = FindCorrespondingSourceFile( kwargs[ 'filename' ] )
+        return {
+            'flags': flags,
+            'include_paths_relative_to_dir': DIR_OF_THIS_SCRIPT,
+            'override_filename': filename
+        }
     # If the file is a header, try to find the corresponding source file and
     # retrieve its flags from the compilation database if using one. This is
     # necessary since compilation databases don't have entries for header files.
