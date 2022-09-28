@@ -1,5 +1,7 @@
+#pragma once
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <deque>
 #include <chrono>
 #include <pthread.h>
@@ -20,6 +22,7 @@
 #include <queue>
 #include <cmath>
 #include <functional>
+#include <atomic>
 
 using namespace std;
 using namespace std::chrono;
@@ -156,11 +159,12 @@ int64_t TNOWMS() {
 #endif
 
 namespace profile {
-    struct CoutHelper {
-        CoutHelper() {
-            setvbuf(stdout, NULL, _IONBF, 0);
-        }
-    };
+
+struct CoutHelper {
+    CoutHelper() {
+        setvbuf(stdout, NULL, _IONBF, 0);
+    }
+};
 struct MemoryHolder {
     static int64_t memoryUsed;
     static bool isStart;
@@ -219,7 +223,7 @@ struct CpuHolder {
 };
 
 static CoutHelper helper;
-}
+}//namespace profile end
 
 #ifdef MEM_TAG
 void* malloc(size_t sz) {
@@ -238,3 +242,67 @@ void free(void *ptr) {
     return my_free(ptr);
 }
 #endif
+
+namespace profile{
+#include <unistd.h>
+#include <stdio.h>
+#include <signal.h>
+
+inline void perfFork(const std::function<void()> &cb, const std::function<string(int)> &pid2Str) {
+    static atomic<int> l = {0};
+    assert(l++ == 0);
+    int pid = getpid();
+    int cpid = fork();
+    string fileName;
+    if (cpid == 0) {
+        string command = pid2Str(pid);
+        execl("/bin/sh", "sh", "-c", command.c_str(), nullptr);
+    }else {
+        setpgid(cpid, 0);
+        sleep(1);
+        cb();
+        kill(-cpid, SIGINT);
+        sleep(1);
+    }
+    l--;
+}
+
+void perfStat(const string &filePrefix, const std::function<void()>& cb) {
+    string filePath = "/tmp/" + filePrefix + "_stat.log";
+    perfFork(cb, [&filePath](int pid) {
+        stringstream ss;
+        ss << "echo 0 > /proc/sys/kernel/nmi_watchdog && "
+            "perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
+            "instructions,branches,branch-misses,cache-references,cache-misses";
+        ss << " -p " << pid << " > " << filePath << " 2>&1";
+        return ss.str();
+    });
+    string result;
+    fstream f(filePath);
+    if (!f.is_open()) {
+        cout << LOGV(filePath) << "open failed" << endl;
+        return;
+    }
+    copy(std::istreambuf_iterator<char>(f),
+        std::istreambuf_iterator<char>(),
+        std::ostreambuf_iterator<char>(cout));
+    perfFork(cb, [&filePath](int pid) {
+        stringstream ss;
+        ss << "echo 1 > /proc/sys/kernel/nmi_watchdog";
+        return ss.str();
+    });
+}
+void perfRecord(const string &filePrefix, const std::function<void()>& cb) {
+    string filePath = "/tmp/" + filePrefix + "_record.perf.data";
+    perfFork(cb, [&filePath](int pid) {
+        stringstream ss;
+        ss << "perf record -F 999 -g -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
+            "instructions,branches,branch-misses,cache-references,cache-misses";
+        ss << " -p " << pid << " -o " << filePath << " > /dev/null 2>&1";
+        return ss.str();
+    });
+    cout << "Run any of this following" << endl;
+    cout << "perf report -i " << filePath << endl;
+    cout << "perf annotate -i " << filePath << endl;
+}
+}//namespace profile end
