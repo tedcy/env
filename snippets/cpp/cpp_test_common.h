@@ -267,6 +267,9 @@ inline void perfFork(const std::function<void()> &cb, const std::function<string
     l--;
 }
 
+//perf 性能分析实例——使用perf优化cache利用率 https://blog.csdn.net/trochiluses/article/details/17346803
+//perf 性能分析利器之perf浅析 http://walkerdu.com/2018/09/13/perf-event/
+//perf 中文手册 http://linux.51yip.com/search/perf
 void perfStat(const string &filePrefix, const std::function<void()>& cb) {
     string filePath = "/tmp/" + filePrefix + "_stat.log";
     perfFork(cb, [&filePath](int pid) {
@@ -292,17 +295,26 @@ void perfStat(const string &filePrefix, const std::function<void()>& cb) {
         return ss.str();
     });
 }
-void perfRecord(const string &filePrefix, const std::function<void()>& cb) {
+
+//event set empty to record all event, or specify one(cycles,instructions,branches,branch-misses,cache-references,cache-misses)
+void perfRecord(const string &filePrefix, const std::function<void()>& cb, const string& event) {
     string filePath = "/tmp/" + filePrefix + "_record.perf.data";
-    perfFork(cb, [&filePath](int pid) {
+    perfFork(cb, [&filePath, &event](int pid) {
         stringstream ss;
-        ss << "perf record -F 999 -g -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
-            "instructions,branches,branch-misses,cache-references,cache-misses";
+        if (event.empty()) {
+            ss << "perf record -F 999 -g -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
+                "instructions,branches,branch-misses,cache-references,cache-misses";
+        }else {
+            ss << "perf record -F 999 -g -e " << event;
+        }
         ss << " -p " << pid << " -o " << filePath << " > /dev/null 2>&1";
         return ss.str();
     });
     cout << "Run any of this following" << endl;
     cout << "perf report -i " << filePath << endl;
     cout << "perf annotate -i " << filePath << endl;
+    cout << "If need flamegraph, specify event when call perfRecord" << endl;
+    cout << "perf script -i " << filePath << 
+        "|/root/FlameGraph/stackcollapse-perf.pl|/root/FlameGraph/flamegraph.pl > " << filePath << ".svg" << endl;
 }
 }//namespace profile end
