@@ -66,6 +66,12 @@ def AddDirsRecursively( flagsRec ):
   flags += new_flags
 AddDirsRecursively( flagsRec )
 
+#  clangd doc
+## https://clangd.llvm.org/design/compile-commands
+
+#  ycm FAQ
+## https://github.com/ycm-core/YouCompleteMe/wiki/FAQ#im-using-clangd-how-can-i-specify-a-per-project-compilation-database-path
+
 compilation_database_folders = ['.', '../', '../../', '../../../', '../../../../', '../../../../../']
 
 isClangd = False
@@ -85,6 +91,10 @@ else:
     cmake_commands = None
     for compilation_database_folder in compilation_database_folders:
         path = os.path.join( compilation_database_folder, 'build', 'compile_commands.json')
+        if os.path.exists( path ):
+            cmake_commands = path
+            break
+        path = os.path.join( compilation_database_folder, 'compile_commands.json')
         if os.path.exists( path ):
             cmake_commands = path
             break

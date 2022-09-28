@@ -57,6 +57,7 @@ nnoremap gfw <Plug>(YCMFindSymbolInWorkspace)
 "设置ycm debug
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
+let g:ycm_clangd_args = ['-pretty']
 
 let g:ycm_auto_hover = ''
 

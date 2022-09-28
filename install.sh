@@ -199,6 +199,9 @@ if [ "$YCMVersion" == "2022_8_18" ];then
     cp clangd/clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 /root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/
     python3 install.py --clangd-completer --force-sudo --verbose --cmake-path=$envPath'/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
     #echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin/clangd'" >> $buildPath/vimrcs/final.vimrc
+    mkdir -pv /root/.config/clangd/
+    echo 'CompileFlags:
+      Remove: [-Werror]' > /root/.config/clangd/config.yaml
 fi
 cd $envPath
 
@@ -250,5 +253,8 @@ if [ ! -d "~/FlameGraph" ];then
         cp -r vim_download/FlameGraph ~/
     fi
 fi
+
+#for perf
+apt-get install -y linux-tools-$(uname -r) linux-tools-generic --allow-unauthenticated
 
 echo "记得bash/set_shell.sh来设置shell"
