@@ -55,6 +55,4 @@ git rebase -i commit-id
 然后选择commit前pick为合并 https://cloud.tencent.com/developer/article/1491814
 "'
 
-export LANG=LANG="zh_CN.utf-8"
-export LANGUAGE="zh_CN:zh:en_US:en"
-export LC_ALL="zh_CN.utf-8"
+export LESSCHARSET=utf-8

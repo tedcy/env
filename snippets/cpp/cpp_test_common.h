@@ -276,7 +276,7 @@ void perfStat(const string &filePrefix, const std::function<void()>& cb) {
         stringstream ss;
         ss << "echo 0 > /proc/sys/kernel/nmi_watchdog && "
             "perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
-            "instructions,branches,branch-misses,cache-references,cache-misses";
+            "instructions,branches,branch-misses,cache-references,cache-misses,L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses";
         ss << " -p " << pid << " > " << filePath << " 2>&1";
         return ss.str();
     });
@@ -302,10 +302,10 @@ void perfRecord(const string &filePrefix, const std::function<void()>& cb, const
     perfFork(cb, [&filePath, &event](int pid) {
         stringstream ss;
         if (event.empty()) {
-            ss << "perf record -F 999 -g -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
+            ss << "perf record -F 99 -g -e task-clock,context-switches,cpu-migrations,page-faults,cycles,"
                 "instructions,branches,branch-misses,cache-references,cache-misses";
         }else {
-            ss << "perf record -F 999 -g -e " << event;
+            ss << "perf record -F 99 -g -e " << event;
         }
         ss << " -p " << pid << " -o " << filePath << " > /dev/null 2>&1";
         return ss.str();
