@@ -271,6 +271,7 @@ inline void perfFork(const std::function<void()> &cb, const std::function<string
 //perf 性能分析利器之perf浅析 http://walkerdu.com/2018/09/13/perf-event/
 //perf 中文手册 http://linux.51yip.com/search/perf
 void perfStat(const string &filePrefix, const std::function<void()>& cb) {
+    cout << "perf stat " << filePrefix << " start" << endl;
     string filePath = "/tmp/" + filePrefix + "_stat.log";
     perfFork(cb, [&filePath](int pid) {
         stringstream ss;
@@ -294,10 +295,12 @@ void perfStat(const string &filePrefix, const std::function<void()>& cb) {
         ss << "echo 1 > /proc/sys/kernel/nmi_watchdog";
         return ss.str();
     });
+    cout << "perf stat " << filePrefix << " end" << endl;
 }
 
 //event set empty to record all event, or specify one(cycles,instructions,branches,branch-misses,cache-references,cache-misses)
 void perfRecord(const string &filePrefix, const std::function<void()>& cb, const string& event) {
+    cout << "perf record " << filePrefix << LOGV(event) << "start" << endl;
     string filePath = "/tmp/" + filePrefix + "_record.perf.data";
     perfFork(cb, [&filePath, &event](int pid) {
         stringstream ss;
@@ -310,6 +313,7 @@ void perfRecord(const string &filePrefix, const std::function<void()>& cb, const
         ss << " -p " << pid << " -o " << filePath << " > /dev/null 2>&1";
         return ss.str();
     });
+    cout << "perf stat " << filePrefix << LOGV(event) << "end" << endl;
     cout << "Run any of this following" << endl;
     cout << "perf report -i " << filePath << endl;
     cout << "perf annotate -i " << filePath << endl;
