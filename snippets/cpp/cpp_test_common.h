@@ -111,7 +111,7 @@ struct Timer {
     Timer(const string& name) : name_(name + ":") {} 
     virtual ~Timer() { 
         auto dur = system_clock::now() - tp;
-        cout << setiosflags(ios::left) << std::setw(20) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
+        cout << setiosflags(ios::left) << std::setw(80) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
     } 
     string name_;
     system_clock::time_point tp = system_clock::now(); 
@@ -315,3 +315,15 @@ inline void perfRecord(const string &filePrefix, const std::function<void()>& cb
         "|/root/FlameGraph/stackcollapse-perf.pl|/root/FlameGraph/flamegraph.pl > " << filePath << ".svg" << endl;
 }
 }//namespace profile end
+
+#include <cxxabi.h>
+inline std::string demangle(const char* mangled) {
+    int status;
+    std::unique_ptr<char[], void (*)(void*)> result(
+            abi::__cxa_demangle(mangled, 0, 0, &status), std::free);
+    return result.get() ? std::string(result.get()) : "error occurred";
+}
+template <typename T>
+string getType() {
+    return demangle(typeid(T).name());
+}
