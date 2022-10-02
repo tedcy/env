@@ -28,10 +28,6 @@ using namespace std;
 using namespace std::chrono;
 
 namespace test_log{
-    template<typename T, typename... Args>
-        std::unique_ptr<T> make_unique(Args&&... args) {
-            return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-        }
     class Any {
         public:
             template <typename T>
@@ -94,7 +90,7 @@ namespace test_log{
         Type type_ = Type::UNKNOWN;
     };
 
-    void log_debug(const vector<DataAny> &vs) {
+    inline void log_debug(const vector<DataAny> &vs) {
         for (auto &v : vs) {
             cout << v.toString();
         }
@@ -143,7 +139,7 @@ struct Bench : public Timer {
     long val = 0; 
 };
 
-int64_t TNOWMS() {
+inline int64_t TNOWMS() {
     std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
         std::chrono::system_clock::now().time_since_epoch()
     );
@@ -267,10 +263,7 @@ inline void perfFork(const std::function<void()> &cb, const std::function<string
     l--;
 }
 
-//perf 性能分析实例——使用perf优化cache利用率 https://blog.csdn.net/trochiluses/article/details/17346803
-//perf 性能分析利器之perf浅析 http://walkerdu.com/2018/09/13/perf-event/
-//perf 中文手册 http://linux.51yip.com/search/perf
-void perfStat(const string &filePrefix, const std::function<void()>& cb) {
+inline void perfStat(const string &filePrefix, const std::function<void()>& cb) {
     cout << "perf stat " << filePrefix << " start" << endl;
     string filePath = "/tmp/" + filePrefix + "_stat.log";
     perfFork(cb, [&filePath](int pid) {
@@ -290,7 +283,7 @@ void perfStat(const string &filePrefix, const std::function<void()>& cb) {
     copy(std::istreambuf_iterator<char>(f),
         std::istreambuf_iterator<char>(),
         std::ostreambuf_iterator<char>(cout));
-    perfFork(cb, [&filePath](int pid) {
+    perfFork(cb, [](int) {
         stringstream ss;
         ss << "echo 1 > /proc/sys/kernel/nmi_watchdog";
         return ss.str();
@@ -299,7 +292,7 @@ void perfStat(const string &filePrefix, const std::function<void()>& cb) {
 }
 
 //event set empty to record all event, or specify one(cycles,instructions,branches,branch-misses,cache-references,cache-misses)
-void perfRecord(const string &filePrefix, const std::function<void()>& cb, const string& event) {
+inline void perfRecord(const string &filePrefix, const std::function<void()>& cb, const string& event) {
     cout << "perf record " << filePrefix << LOGV(event) << "start" << endl;
     string filePath = "/tmp/" + filePrefix + "_record.perf.data";
     perfFork(cb, [&filePath, &event](int pid) {

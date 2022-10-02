@@ -117,7 +117,7 @@ let g:go_highlight_trailing_whitespace_error = 0
 au BufNewFile,BufRead *.go nnoremap gy :GoDef<CR>
 
 " C++
-autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++11 %:p -o out.exe -g -pthread && ./out.exe<CR>
+autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++17 %:p -o out.exe -g -pthread && ./out.exe<CR>
 
 "https://github.com/iamcco/markdown-preview.vim/blob/master/README_cn.md
 ""let g:mkdp_path_to_chrome="chrome"
