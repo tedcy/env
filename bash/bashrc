@@ -8,11 +8,11 @@ shopt -s histappend
 alias ls='ls -F --show-control-chars --color=auto'
 eval `dircolors -b ~/.dir_colors`
 export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-alias gg='g++ -std=c++11 -o out.exe -g -pthread -O2'
-alias ggd='g++ -std=c++11 -o out.exe -g -pthread -D LOG_TAG'
-alias ggm='g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ldl -pthread -O2 -D MEM_TAG'
+alias gg='g++ -std=c++17 -o out.exe -g -pthread -O2'
+alias ggd='g++ -std=c++17 -o out.exe -g -pthread -D LOG_TAG'
+alias ggm='g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ldl -pthread -O2 -D MEM_TAG'
 alias ggmg='_f(){ \
-g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
+g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
 echo "1.RUN HEAPCHECK=local ./out.exe or HEAPCHECK=draconian ./out.exe" && echo "2.RUN ggmgp $ProcessID"
 }; _f'
 alias ggmgp='_f(){ \
@@ -22,7 +22,7 @@ google-pprof ./out.exe "/tmp/out.exe.$1.MemoryHolder-end.heap" --inuse_objects -
 echo "output /tmp/out.svg"
 }; _f'
 alias ggcg='_f(){ 
-g++ -std=c++11 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
+g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
 echo "1.RUN ./out.exe" && echo "2.RUN ggcgl: check lines or ggcgpf: check funcs"
 }; _f'
 alias ggcgpl='_f(){ \
