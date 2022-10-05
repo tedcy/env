@@ -23,6 +23,8 @@
 #include <cmath>
 #include <functional>
 #include <atomic>
+#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 using namespace std::chrono;
@@ -69,6 +71,7 @@ namespace test_log{
         UNKNOWN,
         STRING,
         INT,
+        Double,
     };
 
     struct DataAny {
@@ -77,15 +80,21 @@ namespace test_log{
         DataAny(const string &value) : value_(value), type_(Type::STRING) {
         }
         template <typename T>
-            DataAny(T value, typename std::enable_if<std::is_integral<T>::value>::type* = 0) : value_(int64_t(value)), type_(Type::INT) {
-            }
+        DataAny(T value, typename std::enable_if<std::is_integral<T>::value>::type* = 0) : value_(int64_t(value)), type_(Type::INT) {
+        }
+        template <typename T>
+        DataAny(T value, typename std::enable_if<std::is_floating_point<T>::value>::type* = 0) : value_(double(value)), type_(Type::Double) {
+        }
         string toString() const {
             if(type_ == Type::INT) {
                 return to_string(value_.any_cast<int64_t>());
             }
+            if(type_ == Type::Double) {
+                return to_string(value_.any_cast<double>());
+            }
             return value_.any_cast<string>();
         }
-        private:
+    private:
         Any value_;
         Type type_ = Type::UNKNOWN;
     };
