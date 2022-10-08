@@ -13,10 +13,10 @@ alias ggd='g++ -std=c++17 -o out.exe -g -pthread -D LOG_TAG'
 alias ggm='g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ldl -pthread -O2 -D MEM_TAG'
 alias ggmg='_f(){ \
 g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
-echo "1.RUN HEAPCHECK=local ./out.exe or HEAPCHECK=draconian ./out.exe" && echo "2.RUN ggmgp $ProcessID"
+echo "1.RUN HEAPCHECK=local ./out.exe or HEAPCHECK=draconian ./out.exe" && echo "2.RUN ggmgp $outputFile"
 }; _f'
 alias ggmgp='_f(){ \
-google-pprof ./out.exe "/tmp/out.exe.$1.MemoryHolder-end.heap" --inuse_objects --lines --heapcheck \
+google-pprof ./out.exe $1 --inuse_objects --lines --heapcheck \
 --edgefraction=1e-10 --nodefraction=1e-10 --collapsed > /tmp/out.data && \
 /root/FlameGraph/flamegraph.pl /tmp/out.data > /tmp/out.svg && \
 echo "output /tmp/out.svg"

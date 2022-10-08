@@ -116,11 +116,15 @@ namespace test_log{
 }
 
 struct Timer {
+    static inline int w_ = 40;
+    static void setW(int w) {
+        w_ = w;
+    }
     Timer() = default;
     Timer(const string& name) : name_(name + ":") {} 
     virtual ~Timer() { 
         auto dur = system_clock::now() - tp;
-        cout << setiosflags(ios::left) << std::setw(80) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
+        cout << setiosflags(ios::left) << std::setw(w_) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
     } 
     string name_;
     system_clock::time_point tp = system_clock::now(); 
