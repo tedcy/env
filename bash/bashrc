@@ -23,7 +23,7 @@ echo "output /tmp/out.svg"
 }; _f'
 alias ggcg='_f(){ 
 g++ -std=c++17 -o out.exe -g -Wl,--no-as-need -ltcmalloc -lprofiler -lunwind -pthread -D GPERF_TAG $1 && \
-echo "1.RUN ./out.exe" && echo "2.RUN ggcgl: check lines or ggcgpf: check funcs"
+echo "1.RUN ./out.exe" && echo "2.RUN ggcgpl: check lines or ggcgpf: check funcs"
 }; _f'
 alias ggcgpl='_f(){ \
 google-pprof ./out.exe /tmp/CpuHolder.prof --lines \
