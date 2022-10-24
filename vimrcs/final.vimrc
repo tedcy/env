@@ -46,9 +46,8 @@ colorscheme torte
 
 "设置c++补全
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-"nnoremap gt :YcmCompleter GetTypeImprecise<CR>
 nnoremap gy :YcmCompleter GoToImprecise<CR>
-nnoremap gu :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap gu :YcmCompleter GoToReferences<CR>
 nnoremap gt <plug>(YCMHover)
 map <F9> :YcmCompleter FixIt<CR>
 nnoremap gf <Plug>(YCMFindSymbolInDocument)

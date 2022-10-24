@@ -209,7 +209,7 @@ cd $envPath
 apt-get install -y ctags --allow-unauthenticated
 
 #for leetcode.vim
-pip3 install pynvim
+pip3 install pynvim | true
 
 #other install
 if [ ! -d "vim_download" ];then
@@ -226,7 +226,7 @@ cp $buildPath/vimrcs/final.vimrc ~/.vimrc
 #for cmake completion
 #https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
 #compdb -p build/ list > compile_commands.json  
-#pip install compdb
+pip3 install compdb | true
             
 #for make completion
 #git clone https://github.com/rizsotto/Bear /root/Bear

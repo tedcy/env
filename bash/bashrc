@@ -42,6 +42,11 @@ google-pprof ./out.exe /tmp/CpuHolder.prof --func \
 echo "output /tmp/out.svg"
 }; _f'
 
+alias bear='_f(){ \
+bear $* && cp compile_commands.json compile_commands.json_bk && \
+compdb -p . list > /tmp/compile_commands.json && cp /tmp/compile_commands.json .
+}; _f'
+
 
 alias ll='ls -l'
 
