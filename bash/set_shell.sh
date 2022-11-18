@@ -4,6 +4,8 @@ set -e
 dircolors -p > ~/.dir_colors
 cat bash/bashrc >> ~/.bashrc
 
+locale-gen en_US.UTF-8
+
 echo 'if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
