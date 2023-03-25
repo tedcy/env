@@ -11,6 +11,14 @@ mkdir -pv $buildPath
 
 sudo chmod 1777 /tmp
 
+#git updated to newest to support git pull update submodule
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt update
+sudo apt install git -y
+sudo git config --global submodule.recurse true
+sudo git config --global submodule.ignore dirty
+sudo git config --global diff.ignoreSubmodules dirty
+
 if [ ! `which wget` ];then
     apt-get install -y wget --allow-unauthenticated
 fi
