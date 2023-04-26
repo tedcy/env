@@ -18,6 +18,9 @@ sudo apt install git -y
 sudo git config --global submodule.recurse true
 sudo git config --global submodule.ignore dirty
 sudo git config --global diff.ignoreSubmodules dirty
+# git免http用户名密码
+# echo -n 'https://<user>:<pass>@github.com' >> ~/.git-credentials
+# git config --global credential.helper store
 
 if [ ! `which wget` ];then
     apt-get install -y wget --allow-unauthenticated
