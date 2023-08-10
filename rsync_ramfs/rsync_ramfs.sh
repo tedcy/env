@@ -4,7 +4,7 @@ backup_Path=$2
 set -e
 set -x
 
-/usr/bin/inotifywait -mrq --format '%w%f' -e create,close_write $Path  | while read line  
+/usr/bin/inotifywait -mrq --format '%w%f' -e create,close_write,MODIFY,MOVED_FROM,MOVED_TO $Path  | while read line  
 do
     if [ -f $line ];then
         # Get relative path of the file from the source directory
