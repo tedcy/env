@@ -6,11 +6,11 @@ do
     if [ -f $line ];then
         rsync -avz $line --exclude-from=/ramfs/ServerLess/.gitignore \
         --include='*.sh' --include='*.cpp' --include='*.h' --include='*.hpp' \
-        --include='*.c' --include='*/' --exclude='*' --delete $backup_Path
+        --include='*.c' --include='*/' --exclude='*' $backup_Path
     else
         cd $Path
         rsync -avz ./ --exclude-from=/ramfs/ServerLess/.gitignore \
         --include='*.sh' --include='*.cpp' --include='*.h' --include='*.hpp' \
-        --include='*.c' --include='*/' --exclude='*' --delete $backup_Path
+        --include='*.c' --include='*/' --exclude='*' $backup_Path
     fi
 done
