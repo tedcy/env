@@ -1,12 +1,21 @@
 Path=$1
 backup_Path=$2
 
-/usr/bin/inotifywait -mrq --format '%w%f' -e create,close_write,delete $Path  | while read line  
+set -e
+set -x
+
+/usr/bin/inotifywait -mrq --format '%w%f' -e create,close_write $Path  | while read line  
 do
     if [ -f $line ];then
+        # Get relative path of the file from the source directory
+        relative_path=${line#$Path}
+
+        # Create the directories in the target location
+        mkdir -p "$backup_Path/$(dirname "$relative_path")"
+
         rsync -avz $line --exclude-from=/ramfs/ServerLess/.gitignore \
         --include='*.sh' --include='*.cpp' --include='*.h' --include='*.hpp' \
-        --include='*.c' --include='*/' --exclude='*' $backup_Path
+        --include='*.c' --include='*/' --exclude='*' "$backup_Path/$relative_path"
     else
         cd $Path
         rsync -avz ./ --exclude-from=/ramfs/ServerLess/.gitignore \
