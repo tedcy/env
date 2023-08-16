@@ -1,0 +1,6 @@
+ClangBuildAnalyzer
+build
+.cache
+vim_download
+vim_download.tar.gz
+get-pip.py
