@@ -2,6 +2,7 @@ set -x
 
 isAnalyzerMode=0
 isBearMode=0
+args_with_o_suffix=()
 for arg in "$@"
 do
     if [ "$arg" == "analyzer" ]; then
@@ -9,6 +10,9 @@ do
     fi
     if [ "$arg" == "bear" ]; then
         isBearMode=1
+    fi
+    if [[ "$arg" == *.o ]]; then
+        args_with_o_suffix+=("$arg")
     fi
 done
 
@@ -39,7 +43,7 @@ default_Clang14=${default_Clang14:-"/root/.vim/bundle/YouCompleteMe/clang+llvm-1
 curPath=$(pwd)
 
 if [ "$isAnalyzerMode" -eq 1 ]; then
-    ClangBuildAnalyzerPath="/root/env/ClangBuildAnalyzer/ClangBuildAnalyzer"
+    ClangBuildAnalyzerPath="/root/env/clang_make/ClangBuildAnalyzer"
     if [ ! -d $ClangBuildAnalyzerPath ];then
         git clone https://github.com/aras-p/ClangBuildAnalyzer $ClangBuildAnalyzerPath
     fi
@@ -64,9 +68,9 @@ fi
     
 # 执行 make 命令并添加文件内容
 if [ "$isBearMode" -eq 1 ]; then
-    bear make -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other && cp compile_commands.json compile_commands.json_bk && compdb -p . list > /tmp/compile_commands.json && cp /tmp/compile_commands.json .
+    bear make "${args_with_o_suffix[@]}" -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other && cp compile_commands.json compile_commands.json_bk && compdb -p . list > /tmp/compile_commands.json && cp /tmp/compile_commands.json .
 else
-    make -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other
+    make "${args_with_o_suffix[@]}" -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other
 fi
 
 if [ "$isAnalyzerMode" -eq 1 ]; then
