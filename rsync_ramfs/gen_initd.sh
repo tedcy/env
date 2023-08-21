@@ -29,7 +29,7 @@ service_file="/etc/init.d/rsync_ramfs$id.sh"
 cat > $service_file <<EOF
 start() {
     echo "Starting rsync_ramfs$id..."
-    nohup $script_dir/rsync_ramfs.sh $source_path $backup_path 2>&1 >> /dev/null &
+    nohup $script_dir/rsync_ramfs.sh $source_path $backup_path start 2>&1 >> /dev/null &
 }
 
 stop() {
@@ -52,6 +52,11 @@ restart() {
     start
 }
 
+delete() {
+    echo "Enable deleting rsync to rsync_ramfs$id..."
+    $script_dir/rsync_ramfs.sh $source_path $backup_path delete
+}
+
 EOF
 cat >> $service_file <<'EOF'
 case "$1" in
@@ -69,8 +74,11 @@ cat >> $service_file <<EOF
     status)
         status
         ;;
+    delete)
+        delete
+        ;;
     *)
-        echo "Usage: /etc/init.d/rsync_ramfs$id.sh {start|stop|restart|status}"
+        echo "Usage: /etc/init.d/rsync_ramfs$id.sh {start|stop|restart|status|delete}"
         exit 1
         ;;
 esac
