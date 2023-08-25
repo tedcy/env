@@ -2,6 +2,8 @@ set -x
 
 isAnalyzerMode=0
 isBearMode=0
+isUseHead=0
+lineCount=0
 args_with_o_suffix=()
 for arg in "$@"
 do
@@ -13,6 +15,10 @@ do
     fi
     if [[ "$arg" == *.o ]]; then
         args_with_o_suffix+=("$arg")
+    fi
+    if [[ $arg == h* ]]; then
+        lineCount=${arg#h}
+        isUseHead=1
     fi
 done
 
@@ -65,12 +71,17 @@ if [ -f "make_flags.config" ];then
     make_flags_CFLAGS=$(grep "CFLAGS" make_flags.config | sed 's/CFLAGS=//'| sed 's/CFLAGS =//'| tr -d '"')
     make_flags_other=$(grep -v "CFLAGS" make_flags.config)
 fi
-    
+
 # 执行 make 命令并添加文件内容
+make_args=("${args_with_o_suffix[@]}" -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other)
 if [ "$isBearMode" -eq 1 ]; then
-    bear make "${args_with_o_suffix[@]}" -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other && cp compile_commands.json compile_commands.json_bk && compdb -p . list > /tmp/compile_commands.json && cp /tmp/compile_commands.json .
+    bear make "${make_args[@]}" && cp compile_commands.json compile_commands.json_bk && compdb -p . list > /tmp/compile_commands.json && cp /tmp/compile_commands.json .
 else
-    make "${args_with_o_suffix[@]}" -j CFLAGS="$default_CFLAGS $make_flags_CFLAGS" CXX="$default_Clang14" $make_flags_other
+    if [ "$isUseHead" -eq 1 ]; then
+        make "${make_args[@]}" 2>&1|head -n $lineCount
+    else
+        make "${make_args[@]}"
+    fi
 fi
 
 if [ "$isAnalyzerMode" -eq 1 ]; then
