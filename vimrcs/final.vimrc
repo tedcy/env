@@ -24,10 +24,10 @@ filetype plugin indent on
 let g:go_version_warning = 0
 
 "grep搜索
-map gr viw"ny:grep <C-r>n `find . -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
-vmap gr "ny:grep <C-r>n find . -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
-map gnr viw"ny:grep <C-r>n `find .. -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
-vmap gnr "ny:grep <C-r>n `find .. -type f` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+map gr viw"ny:grep <C-r>n `find . -type f ! -name "*.o" -type f ! -name "*.idx"` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+vmap gr "ny:grep <C-r>n find . -type f ! -name "*.o" -type f ! -name "*.idx` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+map gnr viw"ny:grep <C-r>n `find .. -type f ! -name "*.o" -type f ! -name "*.idx` --binary-files=without-match<CR><CR><C-o>:cw<CR>
+vmap gnr "ny:grep <C-r>n `find .. -type f ! -name "*.o" -type f ! -name "*.idx` --binary-files=without-match<CR><CR><C-o>:cw<CR>
 
 "最大化
 nnoremap <leader>r :resize 80<CR>
@@ -93,8 +93,8 @@ set undolevels=100
 autocmd VimEnter * set autochdir
 "启动具有菜单项提示的命令行自动完成。
 set wildmenu
-" 设置不自动折行
-set nowrap
+" 设置自动折行
+set wrap
 "折叠
 "set nofoldenable
 "set foldmethod=syntax
@@ -116,7 +116,23 @@ let g:go_highlight_trailing_whitespace_error = 0
 au BufNewFile,BufRead *.go nnoremap gy :GoDef<CR>
 
 " C++
-autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++17 %:p -o out.exe -g -pthread && ./out.exe<CR>
+autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++17 %:p -o out.exe -g -Wall -pthread && ./out.exe<CR>
+" Defined a new function called ToggleComments
+function! ToggleComments()
+    " Check if the line starts with //
+    if getline(".") =~ '^//'
+        " If it does, remove them
+        s/^\/\///
+    else
+        " If not, add them
+        s/^/\/\//
+    endif
+endfunction
+"autocmd BufNewFile,BufRead *.cpp vnoremap <C-_> :call ToggleComments()<CR>
+autocmd BufNewFile,BufRead *.cpp map <C-_> :call ToggleComments()<CR>
+
+" C
+autocmd BufNewFile,BufRead *.c map <F2> :! gcc %:p -o out.exe -g -Wall -pthread -lrt && ./out.exe<CR>
 
 "https://github.com/iamcco/markdown-preview.vim/blob/master/README_cn.md
 ""let g:mkdp_path_to_chrome="chrome"
@@ -141,6 +157,12 @@ let g:leetcode_china=1  "中国区leetcode"
 let g:leetcode_browser='chrome'   "登录leetcode-cn.com的浏览器"
 let g:leetcode_cookie='cookie'
 let g:leetcode_debug=1
+function! DisableYcmForNumericFiles()
+    if expand('%:t') =~# '^\d'
+        let g:ycm_show_diagnostics_ui = 0
+    endif
+endfunction
+autocmd BufNewFile,BufRead * call DisableYcmForNumericFiles()
 nnoremap <leader>ll :LeetCodeList<cr>
 nnoremap <leader>lt :LeetCodeTest<cr>
 nnoremap <leader>ls :LeetCodeSubmit<cr>
@@ -150,6 +172,7 @@ nnoremap <leader>li :LeetCodeSignIn<cr>
 au BufNewFile,BufRead * execute cppenv#dummy()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto execute cppenv#infect()
 au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto set fo-=ro
+au BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go,*.proto set nowrap
 
 " 配色方案
 set background=dark
