@@ -1,4 +1,7 @@
 #pragma once
+#define UNW_LOCAL_ONLY
+#include <libunwind.h>
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -340,4 +343,51 @@ inline std::string demangle(const char* mangled) {
 template <typename T>
 string getType() {
     return demangle(typeid(T).name());
+}
+
+
+#include <dlfcn.h>
+#include <link.h>
+
+inline size_t ConvertToVMA(size_t addr)
+{
+    Dl_info info;
+    link_map* link_map;
+    dladdr1((void*)addr,&info,(void**)&link_map,RTLD_DL_LINKMAP);
+    return addr-link_map->l_addr;
+}
+
+inline std::string getBacktrace() {
+    unw_cursor_t cursor;
+    unw_context_t uc;
+    unw_word_t ip, sp;
+    char buf[8 * 1024];
+    unw_word_t offset;
+    unw_getcontext(&uc);            // store registers
+    unw_init_local(&cursor, &uc);   // initialze with context
+
+    std::string s("\n");
+
+    while (unw_step(&cursor) > 0) {                         // unwind to older stack frame
+        unw_get_reg(&cursor, UNW_REG_IP, &ip);              // read register, rip
+        unw_get_reg(&cursor, UNW_REG_SP, &sp);              // read register, rbp
+        unw_get_proc_name(&cursor, buf, sizeof(buf) - 1, &offset);     // get name and offset
+
+        char spbuf[8 * 1024] = {};
+        int len = 0;
+        int status;
+        char* demangled = abi::__cxa_demangle(buf, 0, 0, &status);
+        size_t vma_ip = ConvertToVMA(ip);
+        if (status == 0) {
+            len = snprintf(spbuf, sizeof(spbuf), "0x%016lx <%s+0x%lx>\n", vma_ip, demangled, offset);   // x86_64, unw_word_t == uint64_t
+            free(demangled);
+        } else {
+            len = snprintf(spbuf, sizeof(spbuf), "0x%016lx <%s+0x%lx>\n", vma_ip, buf, offset);   // x86_64, unw_word_t == uint64_t
+        }
+
+        if (len > 0 && len <= (int)sizeof(spbuf))
+            s.append(spbuf, len);
+    }
+
+    return s;
 }

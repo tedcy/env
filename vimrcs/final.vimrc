@@ -116,7 +116,8 @@ let g:go_highlight_trailing_whitespace_error = 0
 au BufNewFile,BufRead *.go nnoremap gy :GoDef<CR>
 
 " C++
-autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++17 %:p -o out.exe -g -Wall -pthread && ./out.exe<CR>
+autocmd BufNewFile,BufRead *.cpp map <F2> :! g++ -std=c++17 %:p -o out.exe -g -Wall -pthread -lunwind -ldl && ./out.exe<CR>
+autocmd BufNewFile,BufRead *.cpp map <F3> :! g++ -std=c++17 %:p -O2 -o out.exe -g -Wall -pthread -unwind -ldl && ./out.exe<CR>
 " Defined a new function called ToggleComments
 function! ToggleComments()
     " Check if the line starts with //
