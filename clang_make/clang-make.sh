@@ -29,7 +29,7 @@ if [ "$isBearMode" -eq 1 ]; then
     echo "bear mode enable"
 fi
 
-default_CFLAGS="-ftime-trace -fno-access-control -Wno-unused-command-line-argument -Wno-unknown-warning-option"
+default_CFLAGS="-ftime-trace -Wno-unused-command-line-argument -Wno-unknown-warning-option"
 
 #default_CFLAGS+=" -Wno-everything"
 #taf warning
