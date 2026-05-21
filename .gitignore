@@ -4,3 +4,9 @@ build
 vim_download
 vim_download.tar.gz
 get-pip.py
+clang_make/downloads/
+clang_make/toolchains/
+clang_make/cxx14/bin/
+clang_make/cxx17/bin/
+clang_make/cxx20/bin/
+clang_make/cxx20/libtinfo5/
