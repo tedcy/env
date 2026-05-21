@@ -5,9 +5,19 @@ set -e
 
 envPath='/root/env'
 buildPath=$envPath/'build'
+export DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-noninteractive}
 
 rm -rf $buildPath
 mkdir -pv $buildPath
+
+if ! command -v sudo >/dev/null 2>&1; then
+    apt-get update
+    apt-get install -y sudo --allow-unauthenticated
+fi
+if ! command -v add-apt-repository >/dev/null 2>&1; then
+    apt-get update
+    apt-get install -y software-properties-common --allow-unauthenticated
+fi
 
 sudo chmod 1777 /tmp
 
@@ -103,7 +113,8 @@ fi
 #vim
 #apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev libgtk2.0-dev libatk1.0-dev \
 #    libbonoboui2-dev libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev python3-dev ruby-dev lua5.1 liblua5.1-dev libperl-dev --allow-unauthenticated
-apt-get install -y libncurses5-dev libbonoboui2-dev --allow-unauthenticated
+#apt-get install -y libncurses5-dev libbonoboui2-dev --allow-unauthenticated
+apt-get install -y libncurses5-dev --allow-unauthenticated
 if [ ! -d "vim_download" ];then
     git clone https://github.com/vim/vim.git $buildPath/vim
 else
@@ -139,10 +150,15 @@ vim +GoInstallBinaries -c quitall
 #ycm clone
 
 #YCMVersion="default"
-#YCMVersion="2022_8_18"
-YCMVersion="c++11_last"
+YCMVersion="2022_8_18"
+#YCMVersion="c++11_last"
 
-apt-get install -y software-properties-common lsb-core --allow-unauthenticated
+apt-get install -y software-properties-common --allow-unauthenticated
+if apt-get install -s lsb-core >/dev/null 2>&1; then
+    apt-get install -y lsb-core --allow-unauthenticated
+else
+    apt-get install -y lsb-release --allow-unauthenticated
+fi
 if [ -f "/usr/bin/python3.5" ];then
     if ! grep -q "python3.5" /usr/bin/add-apt-repository;then
         sed -i "s:python3:python3.5:" /usr/bin/add-apt-repository
@@ -158,7 +174,7 @@ else
 fi
 for i in {1...10}
 do
-    pip3 install future | true
+    pip3 install future || true
 done
 cp -r ~/.vim/bundle/YouCompleteMe_$YCMVersion ~/.vim/bundle/YouCompleteMe
 cp $buildPath/vimrcs/ycm.vimrc ~/.vimrc
@@ -208,7 +224,7 @@ if [ "$YCMVersion" == "2022_8_18" ];then
     #ldconfig
     mkdir -pv /root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clangd/cache
     cp clangd/clangd-14.0.0-x86_64-unknown-linux-gnu.tar.bz2 /root/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/
-    python3 install.py --clangd-completer --force-sudo --verbose --cmake-path=$envPath'/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
+    EXTRA_CMAKE_ARGS='-DCMAKE_CXX_FLAGS="-include cstdint"' python3 install.py --clangd-completer --force-sudo --verbose --cmake-path=$envPath'/vim_download/cmake-3.16.8-Linux-x86_64/bin/cmake' $go_completer
     #echo "let ycm_clangd_binary_path = '/root/.vim/bundle/YouCompleteMe/clang+llvm-14.0.0-x86_64-unknown-linux-gnu/bin/clangd'" >> $buildPath/vimrcs/final.vimrc
     mkdir -pv /root/.config/clangd/
     echo 'CompileFlags:
@@ -217,10 +233,12 @@ fi
 cd $envPath
 
 #for taglist
-apt-get install -y ctags --allow-unauthenticated
+if ! apt-get install -y ctags --allow-unauthenticated; then
+    apt-get install -y universal-ctags --allow-unauthenticated
+fi
 
 #for leetcode.vim
-pip3 install pynvim | true
+pip3 install pynvim || true
 
 #other install
 if [ ! -d "vim_download" ];then
@@ -237,7 +255,7 @@ cp $buildPath/vimrcs/final.vimrc ~/.vimrc
 #for cmake completion
 #https://github.com/Sarcasm/compdb#generate-a-compilation-database-with-header-files
 #compdb -p build/ list > compile_commands.json  
-pip3 install compdb | true
+pip3 install compdb || true
             
 #for make completion
 #git clone https://github.com/rizsotto/Bear /root/Bear
@@ -256,7 +274,8 @@ mkdir -pv ~/.vim/UltiSnips
 cp snippets/all.snippets ~/.vim/UltiSnips/
 
 #for gperftools
-apt-get install -y google-perftools google-perftools-devel libunwind8 libunwind-dev --allow-unauthenticated
+#apt-get install -y google-perftools google-perftools-devel libunwind8 libunwind-dev --allow-unauthenticated
+apt-get install -y google-perftools libgoogle-perftools-dev libunwind8 libunwind-dev --allow-unauthenticated
 if [ ! -d "~/FlameGraph" ];then
     if [ ! -d "vim_download" ];then
         git clone https://github.com/brendangregg/FlameGraph -o ~/FlameGraph
@@ -266,6 +285,8 @@ if [ ! -d "~/FlameGraph" ];then
 fi
 
 #for perf
-apt-get install -y linux-tools-$(uname -r) linux-tools-generic --allow-unauthenticated
+if ! apt-get install -y linux-tools-$(uname -r) linux-tools-generic --allow-unauthenticated; then
+    apt-get install -y linux-tools-generic --allow-unauthenticated || true
+fi
 
 echo "记得bash/set_shell.sh来设置shell"
