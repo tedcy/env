@@ -33,6 +33,13 @@
 using namespace std;
 using namespace std::chrono;
 
+inline int getLogThreadId() {
+    std::stringstream ss;
+    ss << std::this_thread::get_id();
+    int64_t id = atoll(ss.str().c_str());
+    return id % 100000;
+}
+
 namespace test_log{
     class Any {
         public:
@@ -110,35 +117,108 @@ namespace test_log{
         cout << endl;
     }
 
+    class Logger {
+        class Stream {
+            stringstream ss;
+            ostream *stream_ = nullptr;
+        public:
+            static mutex& getMtx() {
+                static mutex mtx;
+                return mtx;
+            }
+            Stream(ostream *s) : stream_(s) {}
+            ~Stream() {
+                if (!stream_) return;
+                unique_lock<mutex> lock(getMtx());
+                *stream_ << ss.str();
+                stream_ = nullptr;
+            }
+            template <typename T>
+                Stream& operator<<(const T &t) {
+                    ss << t;
+                    return *this;
+                }
+            Stream& operator<<( std::ostream&(*)(std::ostream&) ) {
+                ss << endl;
+                return *this;
+            }
+        };
+        class StringStream {
+            stringstream ss;
+            bool enableLog_ = false;
+        public:
+            auto &getStream() {
+                return ss;
+            }
+            void log() {
+                unique_lock<mutex> lock(Stream::getMtx());
+                cout << ss.str() << endl;
+                enableLog_ = false;
+            }
+            void enableLog() {
+                enableLog_ = true;
+            }
+            ~StringStream() {
+                if (enableLog_) {
+                    log();
+                }
+            }
+        };
+    public:
+        static Logger& getLogger() {
+            static Logger logger;
+            return logger;
+        }
+        static auto& getStringStream() {
+            static StringStream ss;
+            return ss;
+        }
+        Stream getStream(bool isCout) {
+            if (isCout) {
+                return {&cout};
+            }
+            return {&getStringStream().getStream()};
+        }
+    };
+
 #define LOGVT(x) "|" , #x , "=" , x ,"|"
 #define LOGV(x) "|" << #x << "=" << x << "|"
 #ifdef LOG_TAG
     #define LDEBUG(...) test_log::log_debug({__VA_ARGS__})
+    #define LOG test_log::Logger::getLogger().getStream(true) << getLogThreadId() << "|" << __FILE__ << ":" << __LINE__ << "|" << __FUNCTION__ << "|"
+    #define LOG_DELAY test_log::Logger::getLogger().getStream(false) << getLogThreadId() << "|" << __FILE__ << ":" << __LINE__ << "|" << __FUNCTION__ << "|"
 #else
     #define LDEBUG(...)
+    #define LOG if (true) {} else cout
+    #define LOG_DELAY if (true) {} else cout
 #endif
+
 }
 
-struct Timer {
-    static inline int w_ = 40;
+class Timer {
+    static int& getW() {
+        static int w_ = 40;
+        return w_;
+    }
+public:
     static void setW(int w) {
-        w_ = w;
+        getW() = w;
     }
     Timer() = default;
     Timer(const string& name) : name_(name + ":") {} 
     virtual ~Timer() { 
-        auto dur = system_clock::now() - tp;
-        cout << setiosflags(ios::left) << std::setw(w_) << name_ << "Cost " << duration_cast<milliseconds>(dur).count() << " ms" << endl; 
+        auto dur = std::chrono::high_resolution_clock::now() - tp;
+        cout << setiosflags(ios::left) << std::setw(getW()) << name_ << "Cost " << duration_cast<microseconds>(dur).count()/double(1000) << " ms" << endl; 
     } 
     string name_;
-    system_clock::time_point tp = system_clock::now(); 
+    system_clock::time_point tp = std::chrono::high_resolution_clock::now(); 
 };
 struct Bench : public Timer { 
     Bench() = default;
     Bench(const string& name) : Timer(name) {} 
     virtual ~Bench() { stop(); }
     void stop() { 
-        auto dur = system_clock::now() - tp; 
+        auto dur = std::chrono::high_resolution_clock::now() - tp; 
         cout << setiosflags(ios::left) << std::setw(20) << name_ <<
             "Per op: " << duration_cast<nanoseconds>(dur).count() / std::max(val, 1L) << " ns" << endl; 
         auto perf = (double)val / duration_cast<milliseconds>(dur).count() / 10; 
@@ -158,7 +238,7 @@ struct Bench : public Timer {
 
 inline int64_t TNOWMS() {
     std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
-        std::chrono::system_clock::now().time_since_epoch()
+        std::chrono::high_resolution_clock::now().time_since_epoch()
     );
     return ms.count();
 }
@@ -256,10 +336,10 @@ void free(void *ptr) {
 }
 #endif
 
-namespace profile{
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+namespace profile{
 
 inline void perfFork(const std::function<void()> &cb, const std::function<string(int)> &pid2Str) {
     static atomic<int> l = {0};
@@ -342,7 +422,8 @@ inline std::string demangle(const char* mangled) {
 }
 template <typename T>
 string getType() {
-    return demangle(typeid(T).name());
+    static string type = demangle(typeid(T).name());
+    return type;
 }
 
 
